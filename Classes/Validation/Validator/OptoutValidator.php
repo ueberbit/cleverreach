@@ -56,7 +56,7 @@ class OptoutValidator extends AbstractValidator
 
         $email = filter_var($value->email, FILTER_SANITIZE_EMAIL);
 
-        if (!$email || $email !== $value->email || GeneralUtility::validEmail($email)) {
+        if (!$email || $email !== $value->email || !GeneralUtility::validEmail($email)) {
             $this->result->forProperty('email')->addError(new Error('Email invalid', 20002));
         }
 
