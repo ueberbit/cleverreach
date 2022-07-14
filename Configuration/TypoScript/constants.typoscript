@@ -1,23 +1,24 @@
 plugin.tx_cleverreach {
-
-    # cat=plugin.tx_cleverreach//a; type=int; label=Client id
+    # cat=plugin.tx_cleverreach//a; type=int; label=Client ID
     clientId =
     # cat=plugin.tx_cleverreach//b; type=string; label=Login name
     login =
     # cat=plugin.tx_cleverreach//c; type=string; label=Password
     password =
-    # cat=plugin.tx_cleverreach//c; type=int; label=Form id: Die Formular-ID
+    # cat=plugin.tx_cleverreach//c; type=int; label=Form ID: Unique ID of the form on cleverreach
     formId =
-    # cat=plugin.tx_cleverreach//c; type=int; label=Group id
+    # cat=plugin.tx_cleverreach//c; type=int; label=Group ID: Unique ID of the group / the newsletter
     groupId =
-    # cat=plugin.tx_cleverreach//d; type=string; label=REST URL
+    # cat=plugin.tx_cleverreach//c; type=string; label=Group name: Name of the newsletter / the group.
+    groupName =
+    # cat=plugin.tx_cleverreach//d; type=string; label=REST URL: Full REST API endpoint
     restUrl = https://rest.cleverreach.com/v2
-    # cat=plugin.tx_cleverreach//e; type=string; label=Source name
-    source = TYPO3
+
+    # cat=plugin.tx_cleverreach//d; type=int; label=Opt-in Redirect: page UID to redirect after opt-in request
+    optinRedirect =
+    # cat=plugin.tx_cleverreach//d; type=int; label=Opt-out Redirect: page UID to redirect after opt-out request
+    optoutRedirect =
     
     # cat=plugin.tx_cleverreach//f; type=options[Set user inactive=inactive,doubleoptout=inactive with double-opt-out email,delete=delete]; label=How users will be removed
-    unsubscribemethod = inactive
-    
-    # cat=plugin.tx_cleverreach//e; type=int; label=Debug mode
-    debug = 0
+    unsubscribemethod = delete
 }

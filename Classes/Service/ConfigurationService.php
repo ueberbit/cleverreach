@@ -1,6 +1,10 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Supseven\Cleverreach\Service;
+
+use TYPO3\CMS\Core\SingletonInterface;
 
 /**
  * This file is part of the "cleverreach" Extension for TYPO3 CMS.
@@ -12,8 +16,12 @@ namespace Supseven\Cleverreach\Service;
 /**
  * Class ConfigurationService
  */
-class ConfigurationService
+class ConfigurationService implements SingletonInterface
 {
+    public const UNSCRIBE_DOUBLEOPTOUT = 'doubleoptout';
+    public const UNSCRIBE_DELETE = 'delete';
+    public const UNSCRIBE_INACTIVE = 'inactive';
+
     public function getConfiguration()
     {
         return $GLOBALS['TSFE']->tmpl->setup['plugin.']['tx_cleverreach.']['settings.'];
@@ -22,70 +30,56 @@ class ConfigurationService
     /**
      * @return string
      */
-    public function getRestUrl()
+    public function getRestUrl(): string
     {
-        $config = $this->getConfiguration();
-
-        return $config['restUrl'];
+        return $this->getConfiguration()['restUrl'];
     }
 
     /**
      * @return string
      */
-    public function getClientId()
+    public function getClientId(): string
     {
-        $config = $this->getConfiguration();
-
-        return $config['clientId'];
+        return (string)$this->getConfiguration()['clientId'];
     }
 
     /**
      * @return string
      */
-    public function getLoginName()
+    public function getLoginName(): string
     {
-        $config = $this->getConfiguration();
-
-        return $config['login'];
+        return (string)$this->getConfiguration()['login'];
     }
 
     /**
      * @return string
      */
-    public function getPassword()
+    public function getPassword(): string
     {
-        $config = $this->getConfiguration();
-
-        return $config['password'];
+        return $this->getConfiguration()['password'];
     }
 
     /**
      * @return int
      */
-    public function getGroupId()
+    public function getGroupId(): int
     {
-        $config = $this->getConfiguration();
-
-        return (int)$config['groupId'];
+        return (int)$this->getConfiguration()['groupId'];
     }
 
     /**
      * @return int
      */
-    public function getFormId()
+    public function getFormId(): int
     {
-        $config = $this->getConfiguration();
-
-        return (int)$config['formId'];
+        return (int)$this->getConfiguration()['formId'];
     }
 
     /**
      * @return string
      */
-    public function getUnsubscribeMethod()
+    public function getUnsubscribeMethod(): string
     {
-        $config = $this->getConfiguration();
-
-        return $config['unsubscribemethod'];
+        return $this->getConfiguration()['unsubscribemethod'];
     }
 }

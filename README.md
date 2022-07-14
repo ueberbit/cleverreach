@@ -1,10 +1,13 @@
 # TYPO3 Extension ``cleverreach`` 
 
+A plugin for optin/opt out as well as finishers and validators for the TYPO3 
+extensions *form* and *powermail*
 
-> Finishers and validators for the TYPO3 extensions *form* and *powermail*
+Based on [wapplersystems/cleverreach](https://github.com/WapplerSystems/cleverreach)
 
 ## Features
 
+- Plugin with optin and opt out
 - Powermail
   - validators
   - finishers
@@ -13,14 +16,11 @@
   - form examples: Opt in, Opt out, contact
   - finisher
 
-## Usage
-
 
 ### Installation as extension from TYPO3 Extension Repository (TER)
 
-Download and install the extension with the extension manager module.
-
+Using composer: `composer require supseven/cleverreach`
 
 ## Documentation
 
-https://docs.typo3.org/typo3cms/extensions/cleverreach/
+Folder [Documentation](./Documentation/Index.rst)

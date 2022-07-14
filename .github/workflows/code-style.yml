@@ -10,14 +10,13 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup PHP
-        uses: nanasess/setup-php@master
+        uses: nanasess/setup-php@v3
         with:
-          php-version: 7.4
+          php-version: 8.1
 
       - name: Check code style
         run: |
-          composer install --prefer-dist -n --no-progress
-          ./vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php -vvv --dry-run --diff
+          make lint

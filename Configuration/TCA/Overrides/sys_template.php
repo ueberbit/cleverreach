@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
@@ -21,6 +22,6 @@ ExtensionManagementUtility::addStaticFile(
 
 ExtensionManagementUtility::registerPageTSConfigFile(
     'cleverreach',
-    'Configuration/TsConfig/Page/powermail.tsconfig',
+    'Configuration/TsConfig/powermail.tsconfig',
     'Powermail'
 );

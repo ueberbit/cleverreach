@@ -1,6 +1,6 @@
 {
     "name": "supseven/cleverreach",
-    "description": "CleverReach finishers and validators for EXT:form and Powermail",
+    "description": "CleverReach plugin as well as finishers and validators for EXT:form and EXT:powermail",
     "type": "typo3-cms-extension",
     "license": "GPL-2.0-or-later",
     "authors": [
@@ -16,11 +16,13 @@
         }
     ],
     "replace": {
-        "wapplersystems/cleverreach": "<1"
+        "svewap/cleverreach": "<10",
+        "wapplersystems/cleverreach": "<10"
     },
     "require": {
-        "typo3/cms-core": "^10.4 || ^11.5",
-        "typo3/cms-frontend": "^10.4 || ^11.5"
+        "typo3/cms-core": "^11.5",
+        "typo3/cms-extbase": "^11.5",
+        "typo3/cms-frontend": "^11.5"
     },
     "autoload": {
         "psr-4": {
@@ -38,15 +40,9 @@
         }
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.6",
-        "in2code/powermail": "^8.4",
-        "typo3/cms-form": "^10.4 || ^11.5",
+        "friendsofphp/php-cs-fixer": "^3.8",
+        "in2code/powermail": "^9.0",
+        "typo3/cms-form": "^11.5",
         "phpunit/phpunit": "^9.5"
-    },
-    "config": {
-        "allow-plugins": {
-            "typo3/cms-composer-installers": true,
-            "typo3/class-alias-loader": true
-        }
     }
 }

@@ -1,13 +1,49 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<xliff version="1.0">
-	<file source-language="en" datatype="plaintext" original="messages" date="2018-02-03T22:04:04Z" product-name="cleverreach">
-		<header/>
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns:t3="http://typo3.org/schemas/xliff" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+	<file source-language="en" original="messages" datatype="plaintext" product-name="cleverreach" date="2022-07-14T13:35:23+02:00">
+		<header></header>
 		<body>
-			<trans-unit id="validator.alreadyInList">
+			<trans-unit id="validator.alreadyInList" resname="validator.alreadyInList">
 				<source>This email address is already in this list.</source>
 			</trans-unit>
-			<trans-unit id="validator.notInList">
+			<trans-unit id="validator.notInList" resname="validator.notInList">
 				<source>This email address is not in this list.</source>
+			</trans-unit>
+			<trans-unit id="validator.noGroupId" resname="validator.noGroupId">
+				<source>No group ID configured</source>
+			</trans-unit>
+			<trans-unit id="validator.noReceiverID" resname="validator.noReceiverID">
+				<source>No valid receiver ID sent</source>
+			</trans-unit>
+			<trans-unit id="error.10002" resname="error.10002">
+				<source>E-mail address invalid</source>
+			</trans-unit>
+			<trans-unit id="error.10003" resname="error.10003">
+				<source>Not agreed to data processing</source>
+			</trans-unit>
+			<trans-unit id="error.1594194662" resname="error.1594194662">
+				<source>No group ID given</source>
+			</trans-unit>
+			<trans-unit id="error.10004" resname="error.10004">
+				<source>Unknown newsletter</source>
+			</trans-unit>
+			<trans-unit id="error.10005" resname="error.10005">
+				<source>E-Mail address is already subscribed</source>
+			</trans-unit>
+			<trans-unit id="error.20001" resname="error.20001">
+				<source>No receiver sent</source>
+			</trans-unit>
+			<trans-unit id="error.20002" resname="error.20002">
+				<source>E-mail address is not valid</source>
+			</trans-unit>
+			<trans-unit id="error.1594195300" resname="error.1594195300">
+				<source>No newsletters configured</source>
+			</trans-unit>
+			<trans-unit id="error.20004" resname="error.20004">
+				<source>Unknown newsletter</source>
+			</trans-unit>
+			<trans-unit id="error.20005" resname="error.20005">
+				<source>E-mail address is not subscribed</source>
 			</trans-unit>
 		</body>
 	</file>

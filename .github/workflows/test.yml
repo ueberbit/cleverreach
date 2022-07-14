@@ -12,29 +12,17 @@ jobs:
     strategy:
       matrix:
         include:
-          - php: '7.4'
-            typo3: '10.4'
-          - php: '7.4'
-            typo3: '11.5'
-          - php: '8.0'
-            typo3: '11.5'
           - php: '8.1'
-            typo3: '11.5'
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup PHP
-        uses: nanasess/setup-php@master
+        uses: nanasess/setup-php@v3
         with:
           php-version: ${{ matrix.php }}
 
-      - name: Test TYPO3 ${{ matrix.typo3 }} on PHP ${{ matrix.php }}
+      - name: Test on PHP ${{ matrix.php }}
         run: |
-          jq 'del(.require)' composer.json | jq 'del(.["require-dev"])' > c.json
-          rm -rf composer.lock vendor public composer.json
-          mv c.json composer.json
-          composer require --ansi -n --no-progress --no-plugins --no-scripts typo3/cms-core:^${{ matrix.typo3 }} typo3/cms-frontend:^${{ matrix.typo3 }} typo3/cms-form:^${{ matrix.typo3 }}
-          composer require --dev --ansi -n --no-progress phpunit/phpunit:^9
-          php vendor/bin/phpunit -c phpunit.xml
+          make unit

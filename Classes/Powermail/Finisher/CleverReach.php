@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Supseven\Cleverreach\Powermail\Finisher;
 
 /**
@@ -12,8 +14,8 @@ namespace Supseven\Cleverreach\Powermail\Finisher;
 use In2code\Powermail\Domain\Model\Answer;
 use In2code\Powermail\Domain\Model\Mail;
 use In2code\Powermail\Finisher\AbstractFinisher;
-use Supseven\Cleverreach\CleverReach\Api;
-use Supseven\Cleverreach\Domain\Model\Receiver;
+use Supseven\Cleverreach\DTO\Receiver;
+use Supseven\Cleverreach\Service\ApiService;
 use Supseven\Cleverreach\Service\ConfigurationService;
 use TYPO3\CMS\Core\TypoScript\TypoScriptService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -21,31 +23,23 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class CleverReach extends AbstractFinisher
 {
     /**
-     * @var array
-     */
-    protected $dataArray = [];
-
-    /**
      * @var string
      */
-    protected $email = '';
+    protected string $email = '';
 
-    /**
-     * @var string
-     */
-    protected $name = '';
+    protected string $name = '';
 
-    public function cleverreachFinisher()
+    public function cleverreachFinisher(): void
     {
         if ($this->email === '') {
             return;
         }
 
         $formValues = $this->getFormValues($this->getMail());
-
         $settings = $this->getSettings();
-        $formId = isset($settings['main']['cleverreachFormId']) && \strlen($settings['main']['cleverreachFormId']) > 0 ? $settings['main']['cleverreachFormId'] : null;
-        $groupId = isset($settings['main']['cleverreachGroupId']) && \strlen($settings['main']['cleverreachGroupId']) > 0 ? $settings['main']['cleverreachGroupId'] : null;
+        $configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
+        $formId = (string)($settings['main']['cleverreachFormId'] ?? '') !== '' ? (int)$settings['main']['cleverreachFormId'] : $configurationService->getFormId();
+        $groupId = (string)($settings['main']['cleverreachGroupId'] ?? '') !== '' ? (int)$settings['main']['cleverreachGroupId'] : $configurationService->getGroupId();
 
         if (array_key_exists('newslettercondition', $formValues)) {
             // checkbox field exists -> check if true
@@ -54,20 +48,24 @@ class CleverReach extends AbstractFinisher
             }
         }
 
-        $api = GeneralUtility::makeInstance(Api::class);
-        $configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
+        $api = GeneralUtility::makeInstance(ApiService::class);
 
-        if ($this->settings['main']['cleverreach'] === Api::MODE_OPTIN) {
-            $receiver = new Receiver($this->email, $formValues);
+        if ($this->settings['main']['cleverreach'] === ApiService::MODE_OPTIN) {
+            $receiver = Receiver::create($this->email, $formValues);
             $api->addReceiversToGroup($receiver, $groupId);
             $api->sendSubscribeMail($this->email, $formId, $groupId);
-        } elseif ($this->settings['main']['cleverreach'] === Api::MODE_OPTOUT) {
-            if ($configurationService->getUnsubscribeMethod() === 'doubleoptout') {
-                $api->sendUnsubscribeMail($this->email);
-            } elseif ($configurationService->getUnsubscribeMethod() === 'delete') {
-                $api->removeReceiversFromGroup($this->email);
-            } else {
-                $api->disableReceiversInGroup($this->email, $groupId);
+        } elseif ($this->settings['main']['cleverreach'] === ApiService::MODE_OPTOUT) {
+            switch ($configurationService->getUnsubscribeMethod()) {
+                case ConfigurationService::UNSCRIBE_DOUBLEOPTOUT:
+                    $api->sendUnsubscribeMail($this->email);
+                    break;
+                case ConfigurationService::UNSCRIBE_DELETE:
+                    $api->removeReceiversFromGroup($this->email);
+                    $api->deleteReceiver($this->email);
+                    break;
+                case ConfigurationService::UNSCRIBE_INACTIVE:
+                    $api->disableReceiversInGroup($this->email, $groupId);
+                    break;
             }
         }
     }
@@ -79,11 +77,12 @@ class CleverReach extends AbstractFinisher
     {
         $configuration = GeneralUtility::makeInstance(TypoScriptService::class)->convertPlainArrayToTypoScriptArray($this->settings);
 
-        if (!empty($configuration['dbEntry.'])) {
+        if (is_array($configuration['dbEntry.'] ?? null)) {
             $this->configuration = $configuration['dbEntry.'];
         }
 
         $this->email = $this->findSenderEmail($this->mail);
+        $this->name = $this->findSenderName($this->mail);
     }
 
     /**
@@ -96,17 +95,17 @@ class CleverReach extends AbstractFinisher
 
         /** @var Answer $answer */
         foreach ($mail->getAnswers() as $answer) {
-            if (!method_exists($answer, 'getField') || !method_exists($answer->getField(), 'getMarker')) {
-                continue;
+            $name = $answer->getField()?->getMarker();
+
+            if ($name) {
+                $value = $answer->getValue();
+
+                if (\is_array($value)) {
+                    $value = implode(', ', $value);
+                }
+
+                $values[$name] = $value;
             }
-
-            $value = $answer->getValue();
-
-            if (\is_array($value)) {
-                $value = implode(', ', $value);
-            }
-
-            $values[$answer->getField()->getMarker()] = $value;
         }
 
         return $values;
@@ -120,16 +119,13 @@ class CleverReach extends AbstractFinisher
     {
         /** @var Answer $answer */
         foreach ($mail->getAnswers() as $answer) {
-            if (!method_exists($answer, 'getField') || !method_exists($answer->getField(), 'getMarker')) {
-                continue;
-            }
-            $value = $answer->getValue();
+            if ($answer->getField()?->isSenderEmail()) {
+                $value = $answer->getValue();
 
-            if (is_array($value)) {
-                $value = implode(', ', $value);
-            }
+                if (is_array($value)) {
+                    $value = implode(', ', $value);
+                }
 
-            if ($answer->getField()->isSenderEmail()) {
                 return $value;
             }
         }
@@ -145,16 +141,13 @@ class CleverReach extends AbstractFinisher
     {
         /** @var Answer $answer */
         foreach ($mail->getAnswers() as $answer) {
-            if (!method_exists($answer, 'getField') || !method_exists($answer->getField(), 'getMarker')) {
-                continue;
-            }
-            $value = $answer->getValue();
+            if ($answer->getField()?->isSenderName()) {
+                $value = $answer->getValue();
 
-            if (is_array($value)) {
-                $value = implode(', ', $value);
-            }
+                if (is_array($value)) {
+                    $value = implode(', ', $value);
+                }
 
-            if ($answer->getField()->isSenderName()) {
                 return $value;
             }
         }

@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Supseven\Cleverreach\Form\Finishers;
 
 /**
@@ -9,37 +11,34 @@ namespace Supseven\Cleverreach\Form\Finishers;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use Supseven\Cleverreach\CleverReach\Api;
-use Supseven\Cleverreach\Domain\Model\Receiver;
+use Supseven\Cleverreach\DTO\Receiver;
+use Supseven\Cleverreach\Service\ApiService;
 use Supseven\Cleverreach\Service\ConfigurationService;
 use TYPO3\CMS\Form\Domain\Finishers\AbstractFinisher;
 use TYPO3\CMS\Form\Domain\Finishers\Exception\FinisherException;
-use TYPO3\CMS\Form\Domain\Model\FormElements\FormElementInterface;
 
 class CleverreachFinisher extends AbstractFinisher
 {
-
     /**
-     * @var Api
+     * @var ApiService
      */
-    protected $api;
+    protected ApiService $api;
 
     /**
      * @var ConfigurationService
      */
-    protected $configurationService;
+    protected ConfigurationService $configurationService;
 
     /**
      * @var array
      */
-    protected $defaultOptions = [
-    ];
+    protected $defaultOptions = [];
 
     /**
-     * @param Api $api
+     * @param ApiService $api
      * @param ConfigurationService $configurationService
      */
-    public function __construct(Api $api, ConfigurationService $configurationService)
+    public function __construct(ApiService $api, ConfigurationService $configurationService)
     {
         $this->api = $api;
         $this->configurationService = $configurationService;
@@ -51,38 +50,30 @@ class CleverreachFinisher extends AbstractFinisher
      *
      * @throws FinisherException
      */
-    protected function executeInternal()
+    protected function executeInternal(): void
     {
-        $formValues = $this->getFormValues();
-
-        $configuration = $this->configurationService->getConfiguration();
-
-        $groupId = isset($this->options['groupId']) && \strlen($this->options['groupId']) > 0 ? $this->options['groupId'] : $configuration['groupId'];
-        $formId = isset($this->options['formId']) && \strlen($this->options['formId']) > 0 ? $this->options['formId'] : $configuration['formId'];
-
-        if (empty($groupId) || empty($formId)) {
-            throw new FinisherException('Form ID or Group ID not set.');
-        }
+        $groupId = (int)($this->options['groupId'] ?? '') ?: $this->configurationService->getGroupId();
+        $formId = (int)($this->options['formId'] ?? '') ?: $this->configurationService->getFormId();
 
         $email = null;
         $attributes = [];
 
-        foreach ($formValues as $identifier => $value) {
+        foreach ($this->finisherContext->getFormValues() as $identifier => $value) {
             $element = $this->finisherContext->getFormRuntime()->getFormDefinition()->getElementByIdentifier($identifier);
 
             if ($element !== null) {
                 $properties = $element->getProperties();
 
-                if (isset($properties['cleverreachField'])) {
+                if (!empty($properties['cleverreachField'])) {
                     switch ($properties['cleverreachField']) {
                         case 'email':
-                            $email = $value;
+                            $email = filter_var($value, FILTER_SANITIZE_EMAIL);
                             break;
                         case 'formId':
-                            $formId = $value;
+                            $formId = (int)filter_var($value, FILTER_SANITIZE_NUMBER_INT);
                             break;
                         case 'groupId':
-                            $groupId = $value;
+                            $groupId = (int)filter_var($value, FILTER_SANITIZE_NUMBER_INT);
                             break;
                         default:
                             $attributes[$properties['cleverreachField']] = $value;
@@ -91,39 +82,20 @@ class CleverreachFinisher extends AbstractFinisher
             }
         }
 
-        if (isset($this->options['mode']) && $email != '') {
-            if (strtolower($this->options['mode']) === Api::MODE_OPTIN) {
-                $receiver = new Receiver($email, $attributes);
+        if (empty($groupId) || empty($formId)) {
+            throw new FinisherException('Form ID or Group ID not set.');
+        }
+
+        $mode = strtolower($this->options['mode'] ?? $this->options['cleverreachmode'] ?? '');
+
+        if ($mode && $email) {
+            if ($mode === ApiService::MODE_OPTIN) {
+                $receiver = Receiver::create($email, $attributes);
                 $this->api->addReceiversToGroup($receiver, $groupId);
                 $this->api->sendSubscribeMail($email, $formId, $groupId);
-            } elseif (strtolower($this->options['mode']) === Api::MODE_OPTOUT) {
+            } elseif ($mode === ApiService::MODE_OPTOUT) {
                 $this->api->sendUnsubscribeMail($email, $formId, $groupId);
             }
         }
-    }
-
-    /**
-     * Returns the values of the submitted form
-     *
-     * @return []
-     */
-    protected function getFormValues(): array
-    {
-        return $this->finisherContext->getFormValues();
-    }
-
-    /**
-     * Returns a form element object for a given identifier.
-     *
-     * @param string $elementIdentifier
-     * @return FormElementInterface|null
-     */
-    protected function getElementByIdentifier(string $elementIdentifier)
-    {
-        return $this
-            ->finisherContext
-            ->getFormRuntime()
-            ->getFormDefinition()
-            ->getElementByIdentifier($elementIdentifier);
     }
 }

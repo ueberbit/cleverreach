@@ -1,8 +1,10 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Supseven\Cleverreach\Powermail\Validator;
 
-use Supseven\Cleverreach\CleverReach\Api;
+use Supseven\Cleverreach\Service\ApiService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -13,12 +15,9 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class OptoutValidator
 {
-
-    /**
-     * @var \Supseven\Cleverreach\CleverReach\Api
-     * @TYPO3\CMS\Extbase\Annotation\Inject
-     */
-    protected $api;
+    public function __construct(private readonly ApiService $apiService)
+    {
+    }
 
     /**
      * Check if given number is higher than in configuration
@@ -27,14 +26,14 @@ class OptoutValidator
      * @param string $validationConfiguration
      * @return bool
      */
-    public function validate121($value, $validationConfiguration): bool
+    public function validate121(mixed $value, mixed $validationConfiguration): bool
     {
-        $value = trim($value);
+        $value = trim((string)$value);
 
         if (!GeneralUtility::validEmail($value)) {
             return false;
         }
 
-        return GeneralUtility::makeInstance(Api::class)->isReceiverOfGroupAndActive($value);
+        return $this->apiService->isReceiverOfGroupAndActive($value);
     }
 }

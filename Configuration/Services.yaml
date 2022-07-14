@@ -7,10 +7,16 @@ services:
   Supseven\Cleverreach\:
     resource: '../Classes/*'
 
+  Supseven\Cleverreach\Form\Finishers\CleverreachFinisher:
+    public: true
+
   Supseven\Cleverreach\Form\Validator\OptinValidator:
     public: true
 
-  Supseven\Cleverreach\Form\Finishers\CleverreachFinisher:
+  Supseven\Cleverreach\Form\Validator\OptoutValidator:
+    public: true
+
+  Supseven\Cleverreach\Powermail\Finisher\CleverReach:
     public: true
 
   Supseven\Cleverreach\Powermail\Validator\OptinValidator:
@@ -19,8 +25,17 @@ services:
   Supseven\Cleverreach\Powermail\Validator\OptoutValidator:
     public: true
 
-  Supseven\Cleverreach\Powermail\Finisher\CleverReach:
+  Supseven\Cleverreach\Service\ApiService:
     public: true
 
-  Supseven\Cleverreach\CleverReach\Api:
+  Supseven\Cleverreach\Service\ConfigurationService:
+    public: true
+
+  Supseven\Cleverreach\Service\SubscriptionService:
+    public: true
+
+  Supseven\Cleverreach\Validation\Validator\OptinValidator:
+    public: true
+
+  Supseven\Cleverreach\Validation\Validator\OptoutValidator:
     public: true
