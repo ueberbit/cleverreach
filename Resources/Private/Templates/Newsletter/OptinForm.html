@@ -2,18 +2,18 @@
     xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
     data-namespace-typo3-fluid="true">
 
-    <div class="CE CE_FORM_FORMFRAMEWORK p-0 m-0">
+    <div class="cleverreach cleverreach-subscribe p-0 m-0">
         <div class="row">
             <div class="col-12 col-lg-8 offset-lg-2">
                 <f:form class="newForm mt-fg" id="newsletter_register" action="optinSubmit" object="{receiver}" name="receiver">
                     <f:form.validationResults>
                         <f:if condition="{validationResults.flattenedErrors}">
                             <div class="alert alert-warning">
-                                <h4><f:translate key="LLL:EXT:theme/Resources/Private/Language/locallang.xlf:cleverreachsubscription.error.intro" /></h4>
+                                <h4><f:translate key="LLL:EXT:cleverreach/Resources/Private/Language/locallang.xlf:error.intro" /></h4>
                                 <ul class="errors m-0 p-0">
                                     <f:for each="{validationResults.flattenedErrors}" as="errors" key="propertyPath">
                                         <f:for each="{errors}" as="error">
-                                            <li><f:translate key="LLL:EXT:theme/Resources/Private/Language/locallang.xlf:cleverreachsubscription.error.{error.code}">{error}</f:translate></li>
+                                            <li><f:translate key="LLL:EXT:cleverreach/Resources/Private/Language/locallang.xlf:error.{error.code}">{error}</f:translate></li>
                                         </f:for>
                                     </f:for>
                                 </ul>
@@ -27,7 +27,7 @@
                                 <f:for each="{newsletter}" as="label" key="groupId" iteration="i">
                                     <div class="input-type-radiobox">
                                         <f:form.radio property="groupId" value="{groupId}" id="nl-{i.index}" checked="{f:if(condition: '{i.index} === 0', then: 'true', else: 'false')}" />
-                                        <label class="d-inline m-0" for="nl-{i.index}">{label}</label>
+                                        <label class="d-inline m-0" for="nl-{i.index}"><f:translate key="{label}">{label}</f:translate></label>
                                     </div>
                                 </f:for>
                             </div>
@@ -35,8 +35,8 @@
                     </div>
 
                     <div class="form-group Email ">
-                        <f:form.textfield type="email" property="email" required="TRUE" placeholder="{f:translate(key: 'LLL:EXT:theme/Resources/Private/Language/locallang.xlf:email.address')}" class=" form-control" id="newsletter_register-email" />
-                        <label for="newsletter_register-email">{f:translate(key: 'LLL:EXT:theme/Resources/Private/Language/locallang.xlf:email.address')}<sup>*</sup></label>
+                        <f:form.textfield type="email" property="email" required="TRUE" placeholder="{f:translate(key: 'LLL:EXT:cleverreach/Resources/Private/Language/locallang.xlf:email.address.placeholder')}" class=" form-control" id="newsletter_register-email" />
+                        <label for="newsletter_register-email">{f:translate(key: 'LLL:EXT:cleverreach/Resources/Private/Language/locallang.xlf:email.address.label')}<sup>*</sup></label>
                     </div>
 
                     <div class="checkbox-wrap Checkbox ">
@@ -45,8 +45,8 @@
                             <label class="add-on custom-control-label" for="newsletter_register-legalNotice">
                                 <f:alias map="{ settings : settings.dataProtection }">
                                     <f:variable name="uri"><f:uri.page pageUid="{settings.2}" absolute="TRUE" /></f:variable>
-                                    <f:variable name="settings" value="{ 0 : settings.0, 1 : settings.1, 2 : uri, 3 : settings.3 }"></f:variable>
-                                    {f:translate(key: 'LLL:EXT:theme/Resources/Private/Language/locallang.xlf:cleverreachsubscription.property.agreed', arguments: settings) -> f:format.raw()}
+                                    <f:variable name="args" value="{ 0 : settings.0, 1 : settings.1, 2 : uri, 3 : settings.3 }"></f:variable>
+                                    {f:translate(key: 'LLL:EXT:cleverreach/Resources/Private/Language/locallang.xlf:agreed.label', arguments: args) -> f:format.raw()}
                                 </f:alias>
                                 <sup>*</sup>
                             </label>
@@ -56,7 +56,7 @@
                     <div class="actions">
                         <nav class="form-navigation">
                             <div class="btn-toolbar" role="toolbar">
-                                <div class="btn-group" role="group"><span class="next submit"><button class="btn btn-primary" type="submit"><f:translate key="LLL:EXT:theme/Resources/Private/Language/locallang.xlf:cleverreachsubscription.btn.subscribe" /></button></span></div>
+                                <div class="btn-group" role="group"><span class="next submit"><button class="btn btn-primary" type="submit"><f:translate key="LLL:EXT:cleverreach/Resources/Private/Language/locallang.xlf:btn.subscribe" /></button></span></div>
                             </div>
                         </nav>
                     </div>

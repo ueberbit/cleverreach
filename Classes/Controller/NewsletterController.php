@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Supseven\Cleverreach\Controller;
 
+use Psr\Http\Message\ResponseInterface;
 use Supseven\Cleverreach\DTO\RegistrationRequest;
 use Supseven\Cleverreach\DTO\Subscriber;
 use Supseven\Cleverreach\Service\SubscriptionService;
@@ -54,7 +55,7 @@ class NewsletterController extends ActionController
      * @IgnoreValidation("receiver")
      * @param RegistrationRequest|null $receiver
      */
-    public function optinFormAction(?RegistrationRequest $receiver = null): void
+    public function optinFormAction(?RegistrationRequest $receiver = null): ResponseInterface
     {
         $newsletter = [];
 
@@ -64,6 +65,8 @@ class NewsletterController extends ActionController
 
         $this->view->assign('receiver', $receiver ?? new RegistrationRequest());
         $this->view->assign('newsletter', $newsletter);
+
+        return $this->htmlResponse();
     }
 
     /**

@@ -18,7 +18,14 @@ plugin.tx_cleverreach {
     optinRedirect =
     # cat=plugin.tx_cleverreach//d; type=int; label=Opt-out Redirect: page UID to redirect after opt-out request
     optoutRedirect =
-    
+
     # cat=plugin.tx_cleverreach//f; type=options[Set user inactive=inactive,doubleoptout=inactive with double-opt-out email,delete=delete]; label=How users will be removed
     unsubscribemethod = delete
+
+    # cat=plugin.tx_cleverreach//f; type=string; label=Data Protection: Owner
+    dataProtection.owner =
+    # cat=plugin.tx_cleverreach//f; type=int; label=Data Protection: Data Protection Page UID
+    dataProtection.pid =
+    # cat=plugin.tx_cleverreach//f; type=string; label=Data Protection: Data Protection Page Name
+    dataProtection.pageName =
 }

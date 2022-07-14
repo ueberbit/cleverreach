@@ -14,10 +14,20 @@ plugin.tx_cleverreach.settings {
     }
 
     newsletter {
-        {$plugin.tx_cleverreach.groupId} {
-            label = {$plugin.tx_cleverreach.groupName}
-            formId = {$plugin.tx_cleverreach.formId}
+        1 {
+            {$plugin.tx_cleverreach.groupId} {
+                label = {$plugin.tx_cleverreach.groupName}
+                formId = {$plugin.tx_cleverreach.formId}
+            }
         }
+    }
+
+    # used for link generation in gdpr text (checkbox label)
+    dataProtection {
+        0 = {$plugin.tx_cleverreach.dataProtection.owner}
+        1 = {$plugin.tx_cleverreach.dataProtection.owner}
+        2 = {$plugin.tx_cleverreach.dataProtection.pid}
+        3 = {$plugin.tx_cleverreach.dataProtection.pageName}
     }
 }
 

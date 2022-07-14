@@ -1,0 +1,23 @@
+mod.wizards.newContentElement.wizardItems.plugins {
+    elements {
+        cleverreach_pi1 {
+            iconIdentifier = cleverreach
+            title = LLL:EXT:cleverreach/Resources/Private/Language/locallang.xlf:plugin.cleverreach_pi1.title
+            description = LLL:EXT:cleverreach/Resources/Private/Language/locallang.xlf:plugin.cleverreach_pi1.description
+            tt_content_defValues {
+                CType = list
+                list_type = cleverreach_pi1
+            }
+        }
+        cleverreach_pi2 {
+            iconIdentifier = cleverreach
+            title = LLL:EXT:theme/Resources/Private/Language/locallang_ContentElements.xlf:theme_accordion_address.title
+            description = LLL:EXT:theme/Resources/Private/Language/locallang_ContentElements.xlf:theme_accordion_address.description
+            tt_content_defValues {
+                CType = list
+                list_type = cleverreach_pi2
+            }
+        }
+    }
+    show := addToList(cleverreach_pi1,cleverreach_pi2)
+}

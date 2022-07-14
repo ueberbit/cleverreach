@@ -6,6 +6,8 @@ namespace Supseven\Cleverreach\Validation\Validator;
 
 use Supseven\Cleverreach\DTO\RegistrationRequest;
 use Supseven\Cleverreach\Service\ApiService;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Validation\Error;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
@@ -61,6 +63,12 @@ class OptinValidator extends AbstractValidator
 
         if ($value->agreed !== true) {
             $this->result->forProperty('agreed')->addError(new Error('Not accepted', 10003));
+        }
+
+        // Workaround for no DI in later extbase. needs a better solution
+        if (!$this->configurationManager) {
+            $this->configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
+            $this->apiService = GeneralUtility::makeInstance(ApiService::class);
         }
 
         $newsletters = $this->configurationManager->getConfiguration(
