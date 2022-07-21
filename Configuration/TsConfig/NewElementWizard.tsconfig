@@ -2,8 +2,8 @@ mod.wizards.newContentElement.wizardItems.plugins {
     elements {
         cleverreach_pi1 {
             iconIdentifier = cleverreach
-            title = LLL:EXT:cleverreach/Resources/Private/Language/locallang.xlf:plugin.cleverreach_pi1.title
-            description = LLL:EXT:cleverreach/Resources/Private/Language/locallang.xlf:plugin.cleverreach_pi1.description
+            title = LLL:EXT:cleverreach/Resources/Private/Language/shared.xlf:plugin.cleverreach_pi1.title
+            description = LLL:EXT:cleverreach/Resources/Private/Language/shared.xlf:plugin.cleverreach_pi1.description
             tt_content_defValues {
                 CType = list
                 list_type = cleverreach_pi1
@@ -11,8 +11,8 @@ mod.wizards.newContentElement.wizardItems.plugins {
         }
         cleverreach_pi2 {
             iconIdentifier = cleverreach
-            title = LLL:EXT:theme/Resources/Private/Language/locallang_ContentElements.xlf:theme_accordion_address.title
-            description = LLL:EXT:theme/Resources/Private/Language/locallang_ContentElements.xlf:theme_accordion_address.description
+            title = LLL:EXT:cleverreach/Resources/Private/Language/shared.xlf:plugin.cleverreach_pi2.title
+            description = LLL:EXT:cleverreach/Resources/Private/Language/shared.xlf:plugin.cleverreach_pi2.description
             tt_content_defValues {
                 CType = list
                 list_type = cleverreach_pi2

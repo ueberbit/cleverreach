@@ -9,11 +9,11 @@
                     <f:form.validationResults>
                         <f:if condition="{validationResults.flattenedErrors}">
                             <div class="alert alert-warning">
-                                <h4><f:translate key="LLL:EXT:cleverreach/Resources/Private/Language/locallang.xlf:error.intro" /></h4>
+                                <h4><f:translate key="LLL:EXT:cleverreach/Resources/Private/Language/shared.xlf:error.intro" /></h4>
                                 <ul class="errors m-0 p-0">
                                     <f:for each="{validationResults.flattenedErrors}" as="errors" key="propertyPath">
                                         <f:for each="{errors}" as="error">
-                                            <li><f:translate key="LLL:EXT:cleverreach/Resources/Private/Language/locallang.xlf:error.{error.code}">{error}</f:translate></li>
+                                            <li><f:translate key="LLL:EXT:cleverreach/Resources/Private/Language/shared.xlf:error.{error.code}">{error}</f:translate></li>
                                         </f:for>
                                     </f:for>
                                 </ul>
@@ -35,8 +35,8 @@
                     </div>
 
                     <div class="form-group Email ">
-                        <f:form.textfield type="email" property="email" required="TRUE" placeholder="{f:translate(key: 'LLL:EXT:cleverreach/Resources/Private/Language/locallang.xlf:email.address.placeholder')}" class=" form-control" id="newsletter_register-email" />
-                        <label for="newsletter_register-email">{f:translate(key: 'LLL:EXT:cleverreach/Resources/Private/Language/locallang.xlf:email.address.label')}<sup>*</sup></label>
+                        <f:form.textfield type="email" property="email" required="TRUE" placeholder="{f:translate(key: 'LLL:EXT:cleverreach/Resources/Private/Language/shared.xlf:email.address.placeholder')}" class=" form-control" id="newsletter_register-email" />
+                        <label for="newsletter_register-email">{f:translate(key: 'LLL:EXT:cleverreach/Resources/Private/Language/shared.xlf:email.address.label')}<sup>*</sup></label>
                     </div>
 
                     <div class="checkbox-wrap Checkbox ">
@@ -46,7 +46,7 @@
                                 <f:alias map="{ settings : settings.dataProtection }">
                                     <f:variable name="uri"><f:uri.page pageUid="{settings.2}" absolute="TRUE" /></f:variable>
                                     <f:variable name="args" value="{ 0 : settings.0, 1 : settings.1, 2 : uri, 3 : settings.3 }"></f:variable>
-                                    {f:translate(key: 'LLL:EXT:cleverreach/Resources/Private/Language/locallang.xlf:agreed.label', arguments: args) -> f:format.raw()}
+                                    {f:translate(key: 'LLL:EXT:cleverreach/Resources/Private/Language/shared.xlf:agreed.label', arguments: args) -> f:format.raw()}
                                 </f:alias>
                                 <sup>*</sup>
                             </label>
@@ -56,7 +56,7 @@
                     <div class="actions">
                         <nav class="form-navigation">
                             <div class="btn-toolbar" role="toolbar">
-                                <div class="btn-group" role="group"><span class="next submit"><button class="btn btn-primary" type="submit"><f:translate key="LLL:EXT:cleverreach/Resources/Private/Language/locallang.xlf:btn.subscribe" /></button></span></div>
+                                <div class="btn-group" role="group"><span class="next submit"><button class="btn btn-primary" type="submit"><f:translate key="LLL:EXT:cleverreach/Resources/Private/Language/shared.xlf:btn.subscribe" /></button></span></div>
                             </div>
                         </nav>
                     </div>
