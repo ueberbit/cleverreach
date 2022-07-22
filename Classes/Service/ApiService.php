@@ -198,11 +198,11 @@ class ApiService implements SingletonInterface
     {
         $this->connect();
         $groupId ??= $this->configurationService->getGroupId();
+        $result = null;
 
         try {
             $return = $this->rest->get('/groups.json/' . $groupId . '/receivers/' . $id);
-
-            return Receiver::make($return);
+            $result = Receiver::make($return);
         } catch (GuzzleException $ex) {
             // A 404 code just means false and is a valid response
             if ($ex instanceof BadResponseException && (int)$ex->getCode() !== 404) {
@@ -210,7 +210,7 @@ class ApiService implements SingletonInterface
             }
         }
 
-        return null;
+        return $result;
     }
 
     /**

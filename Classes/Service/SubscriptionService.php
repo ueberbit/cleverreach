@@ -26,8 +26,13 @@ class SubscriptionService
             return;
         }
 
-        $receiver = Receiver::create($subscriber->email);
-        $this->apiService->addReceiversToGroup($receiver, $subscriber->groupId);
+        $existing = $this->apiService->getReceiverOfGroup($subscriber->email, $subscriber->groupId);
+
+        if (!$existing) {
+            $receiver = Receiver::create($subscriber->email);
+            $this->apiService->addReceiversToGroup($receiver, $subscriber->groupId);
+        }
+
         $this->apiService->sendSubscribeMail($subscriber->email, $subscriber->formId, $subscriber->groupId);
     }
 

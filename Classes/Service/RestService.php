@@ -19,6 +19,7 @@ class RestService implements SingletonInterface
 {
     private string $url = '';
     private string $bearerToken = '';
+    private array $fetchCache = [];
 
     public function __construct(private readonly RequestFactory $requestFactory)
     {
@@ -61,7 +62,11 @@ class RestService implements SingletonInterface
             $url .= '?' . http_build_query($data);
         }
 
-        return $this->request($url, $method);
+        if (!array_key_exists($url, $this->fetchCache)) {
+            $this->fetchCache[$url] = $this->request($url, $method);
+        }
+
+        return $this->fetchCache[$url];
     }
 
     /**
