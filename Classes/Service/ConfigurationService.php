@@ -82,4 +82,11 @@ class ConfigurationService implements SingletonInterface
     {
         return $this->getConfiguration()['unsubscribemethod'];
     }
+
+    public function isTestEmail(string $email): bool
+    {
+        $testMail = $this->getConfiguration()['testEmail'] ?? '';
+
+        return $email && $testMail && $email === $testMail;
+    }
 }

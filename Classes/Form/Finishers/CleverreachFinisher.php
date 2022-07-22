@@ -82,6 +82,10 @@ class CleverreachFinisher extends AbstractFinisher
             }
         }
 
+        if ($this->configurationService->isTestEmail($email)) {
+            return;
+        }
+
         if (empty($groupId) || empty($formId)) {
             throw new FinisherException('Form ID or Group ID not set.');
         }

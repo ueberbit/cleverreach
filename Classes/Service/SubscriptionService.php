@@ -14,12 +14,18 @@ use Supseven\Cleverreach\DTO\Subscriber;
  */
 class SubscriptionService
 {
-    public function __construct(private readonly ApiService $apiService)
-    {
+    public function __construct(
+        private readonly ApiService $apiService,
+        private readonly ConfigurationService $configurationService
+    ) {
     }
 
     public function subscribe(Subscriber $subscriber): void
     {
+        if ($this->configurationService->isTestEmail($subscriber->email)) {
+            return;
+        }
+
         $receiver = Receiver::create($subscriber->email);
         $this->apiService->addReceiversToGroup($receiver, $subscriber->groupId);
         $this->apiService->sendSubscribeMail($subscriber->email, $subscriber->formId, $subscriber->groupId);
@@ -27,6 +33,10 @@ class SubscriptionService
 
     public function unsubscribe(Subscriber $subscriber): void
     {
+        if ($this->configurationService->isTestEmail($subscriber->email)) {
+            return;
+        }
+
         $this->apiService->sendUnsubscribeMail($subscriber->email, $subscriber->formId, $subscriber->groupId);
     }
 }

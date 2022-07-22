@@ -72,6 +72,10 @@ class OptinValidator extends AbstractValidator
             return;
         }
 
+        if ($this->configurationService->isTestEmail((string)$value)) {
+            return;
+        }
+
         if ($this->apiService->isReceiverOfGroupAndActive((string)$value, $groupId)) {
             $this->addError(
                 $this->translateErrorMessage('validator.alreadyInList', 'cleverreach'),

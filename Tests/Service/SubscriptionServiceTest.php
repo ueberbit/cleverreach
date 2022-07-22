@@ -6,6 +6,7 @@ namespace Supseven\Cleverreach\Tests\Service;
 
 use Supseven\Cleverreach\DTO\Subscriber;
 use Supseven\Cleverreach\Service\ApiService;
+use Supseven\Cleverreach\Service\ConfigurationService;
 use Supseven\Cleverreach\Service\SubscriptionService;
 use Supseven\Cleverreach\Tests\LocalBaseTestCase;
 
@@ -18,6 +19,9 @@ class SubscriptionServiceTest extends LocalBaseTestCase
         $GLOBALS['TSFE'] = new \stdClass();
         $GLOBALS['TSFE']->rootLine = [['uid' => 1]];
 
+        $config = $this->createStub(ConfigurationService::class);
+        $config->method('isTestEmail')->willReturn(false);
+
         $api = $this->createMock(ApiService::class);
         $api->expects(self::once())->method('addReceiversToGroup');
         $api->expects(self::once())->method('sendSubscribeMail')->with(
@@ -26,7 +30,7 @@ class SubscriptionServiceTest extends LocalBaseTestCase
             self::equalTo($subscriber->groupId)
         );
 
-        $subject = new SubscriptionService($api);
+        $subject = new SubscriptionService($api, $config);
         $subject->subscribe($subscriber);
     }
 
@@ -37,6 +41,9 @@ class SubscriptionServiceTest extends LocalBaseTestCase
         $GLOBALS['TSFE'] = new \stdClass();
         $GLOBALS['TSFE']->rootLine = [['uid' => 1]];
 
+        $config = $this->createStub(ConfigurationService::class);
+        $config->method('isTestEmail')->willReturn(false);
+
         $api = $this->createMock(ApiService::class);
         $api->expects(self::once())->method('sendUnsubscribeMail')->with(
             self::equalTo($subscriber->email),
@@ -44,7 +51,7 @@ class SubscriptionServiceTest extends LocalBaseTestCase
             self::equalTo($subscriber->groupId)
         );
 
-        $subject = new SubscriptionService($api);
+        $subject = new SubscriptionService($api, $config);
         $subject->unsubscribe($subscriber);
     }
 }

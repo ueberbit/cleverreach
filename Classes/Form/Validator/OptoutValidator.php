@@ -72,6 +72,10 @@ class OptoutValidator extends AbstractValidator
             return;
         }
 
+        if ($this->configurationService->isTestEmail((string)$value)) {
+            return;
+        }
+
         if (!$this->apiService->isReceiverOfGroupAndActive($value, $groupId)) {
             $this->addError(
                 $this->translateErrorMessage(

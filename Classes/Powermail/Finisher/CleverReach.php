@@ -48,6 +48,10 @@ class CleverReach extends AbstractFinisher
             }
         }
 
+        if ($configurationService->isTestEmail($this->email)) {
+            return;
+        }
+
         $api = GeneralUtility::makeInstance(ApiService::class);
 
         if ($this->settings['main']['cleverreach'] === ApiService::MODE_OPTIN) {

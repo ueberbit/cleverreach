@@ -7,8 +7,10 @@ namespace Supseven\Cleverreach\Tests\Validation\Validator;
 use Supseven\Cleverreach\DTO\Receiver;
 use Supseven\Cleverreach\DTO\RegistrationRequest;
 use Supseven\Cleverreach\Service\ApiService;
+use Supseven\Cleverreach\Service\ConfigurationService;
 use Supseven\Cleverreach\Tests\LocalBaseTestCase;
 use Supseven\Cleverreach\Validation\Validator\OptinValidator;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
@@ -19,6 +21,11 @@ use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
  */
 class OptInValidatorTest extends LocalBaseTestCase
 {
+    protected function tearDown(): void
+    {
+        GeneralUtility::purgeInstances();
+    }
+
     /**
      * @dataProvider validateDataProvider
      * @param RegistrationRequest $receiver
@@ -32,9 +39,14 @@ class OptInValidatorTest extends LocalBaseTestCase
         $GLOBALS['TSFE'] = new \stdClass();
         $GLOBALS['TSFE']->rootLine = [['uid' => 1]];
 
+        $config = $this->createStub(ConfigurationService::class);
+        $config->method('isTestEmail')->willReturn(false);
+
+        GeneralUtility::setSingletonInstance(ConfigurationService::class, $config);
+        GeneralUtility::setSingletonInstance(ApiService::class, $api);
+        GeneralUtility::setSingletonInstance(ConfigurationManager::class, $this->getConfigurationManager());
+
         $subject = new OptinValidator();
-        $subject->injectConfigurationManager($this->getConfigurationManager());
-        $subject->injectApi($api);
         $result = $subject->validate($receiver);
         $errors = $result->getFlattenedErrors();
         $error = current(current($errors));
@@ -68,9 +80,14 @@ class OptInValidatorTest extends LocalBaseTestCase
 
         $receiver = new RegistrationRequest('abc@domain.tld', true, 1);
 
+        $config = $this->createStub(ConfigurationService::class);
+        $config->method('isTestEmail')->willReturn(false);
+
+        GeneralUtility::setSingletonInstance(ConfigurationService::class, $config);
+        GeneralUtility::setSingletonInstance(ApiService::class, $api);
+        GeneralUtility::setSingletonInstance(ConfigurationManager::class, $this->getConfigurationManager());
+
         $subject = new OptinValidator();
-        $subject->injectConfigurationManager($this->getConfigurationManager());
-        $subject->injectApi($api);
         $result = $subject->validate($receiver);
 
         self::assertSame([], $result->getFlattenedErrors());
@@ -88,9 +105,14 @@ class OptInValidatorTest extends LocalBaseTestCase
 
         $receiver = new RegistrationRequest('abc@domain.tld', true, 1);
 
+        $config = $this->createStub(ConfigurationService::class);
+        $config->method('isTestEmail')->willReturn(false);
+
+        GeneralUtility::setSingletonInstance(ConfigurationService::class, $config);
+        GeneralUtility::setSingletonInstance(ApiService::class, $api);
+        GeneralUtility::setSingletonInstance(ConfigurationManager::class, $this->getConfigurationManager());
+
         $subject = new OptinValidator();
-        $subject->injectConfigurationManager($this->getConfigurationManager());
-        $subject->injectApi($api);
         $result = $subject->validate($receiver);
         $errors = $result->getFlattenedErrors();
         $error = current(current($errors));

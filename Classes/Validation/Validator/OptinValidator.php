@@ -6,6 +6,7 @@ namespace Supseven\Cleverreach\Validation\Validator;
 
 use Supseven\Cleverreach\DTO\RegistrationRequest;
 use Supseven\Cleverreach\Service\ApiService;
+use Supseven\Cleverreach\Service\ConfigurationService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
 use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
@@ -32,19 +33,17 @@ class OptinValidator extends AbstractValidator
     protected ApiService $apiService;
 
     /**
-     * @param ConfigurationManagerInterface $configurationManager
+     * @var ConfigurationService
      */
-    public function injectConfigurationManager(ConfigurationManagerInterface $configurationManager): void
-    {
-        $this->configurationManager = $configurationManager;
-    }
+    protected ConfigurationService $configurationService;
 
-    /**
-     * @param ApiService $api
-     */
-    public function injectApi(ApiService $api): void
+    public function __construct(array $options = [])
     {
-        $this->apiService = $api;
+        // Workaround for no DI in later extbase. needs a better solution
+        $this->configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
+        $this->configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
+        $this->apiService = GeneralUtility::makeInstance(ApiService::class);
+        parent::__construct($options);
     }
 
     protected function isValid($value): void
@@ -65,12 +64,6 @@ class OptinValidator extends AbstractValidator
             $this->result->forProperty('agreed')->addError(new Error('Not accepted', 10003));
         }
 
-        // Workaround for no DI in later extbase. needs a better solution
-        if (!$this->configurationManager) {
-            $this->configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
-            $this->apiService = GeneralUtility::makeInstance(ApiService::class);
-        }
-
         $newsletters = $this->configurationManager->getConfiguration(
             ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
             'CleverreachSubscription'
@@ -84,6 +77,10 @@ class OptinValidator extends AbstractValidator
 
         if (empty($newsletters[$rootUid][$value->groupId]['formId'])) {
             $this->result->forProperty('groupId')->addError(new Error('unknown newsletter', 10004));
+        }
+
+        if ($this->configurationService->isTestEmail($email)) {
+            return;
         }
 
         $receiver = $this->apiService->getReceiverOfGroup($value->email, $value->groupId);
