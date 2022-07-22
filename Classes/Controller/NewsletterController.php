@@ -7,8 +7,8 @@ namespace Supseven\Cleverreach\Controller;
 use Psr\Http\Message\ResponseInterface;
 use Supseven\Cleverreach\DTO\RegistrationRequest;
 use Supseven\Cleverreach\DTO\Subscriber;
+use Supseven\Cleverreach\Service\ConfigurationService;
 use Supseven\Cleverreach\Service\SubscriptionService;
-use TYPO3\CMS\Core\Exception;
 use TYPO3\CMS\Extbase\Annotation\IgnoreValidation;
 use TYPO3\CMS\Extbase\Annotation\Validate;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
@@ -25,11 +25,7 @@ class NewsletterController extends ActionController
      */
     protected SubscriptionService $subscriptionService;
 
-    /** @var int RootPageUid */
-    protected int $rootUid = 0;
-
-    /** @var array Newsletter TypoScript Settings */
-    protected array $newsletterSettings = [];
+    protected ConfigurationService $configurationService;
 
     /**
      * @param SubscriptionService $subscriptionService
@@ -39,27 +35,24 @@ class NewsletterController extends ActionController
         $this->subscriptionService = $subscriptionService;
     }
 
-    public function initializeAction(): void
+    /**
+     * @param ConfigurationService $configurationService
+     */
+    public function injectConfigurationService(ConfigurationService $configurationService): void
     {
-        $this->rootUid = (int)$GLOBALS['TSFE']->rootLine[0]['uid'];
-
-        if (!isset($this->settings['newsletter'][$this->rootUid])) {
-            throw new Exception('No Newsletter Configuration found. Please check TypoScript Settings', 1594110443);
-        }
-        $this->newsletterSettings = $this->settings['newsletter'][$this->rootUid];
-
-        parent::initializeAction();
+        $this->configurationService = $configurationService;
     }
 
     /**
      * @IgnoreValidation("receiver")
      * @param RegistrationRequest|null $receiver
+     * @return ResponseInterface
      */
     public function optinFormAction(?RegistrationRequest $receiver = null): ResponseInterface
     {
         $newsletter = [];
 
-        foreach ($this->newsletterSettings ?? [] as $groupId => $item) {
+        foreach ($this->configurationService->getCurrentNewsletters() as $groupId => $item) {
             $newsletter[$groupId] = $item['label'];
         }
 
@@ -76,7 +69,7 @@ class NewsletterController extends ActionController
     public function optinSubmitAction(RegistrationRequest $receiver): void
     {
         $groupId = $receiver->groupId;
-        $formId = (int)$this->newsletterSettings[$groupId]['formId'];
+        $formId = (int)$this->configurationService->getCurrentNewsletters()[$groupId]['formId'];
         $subscription = new Subscriber($receiver->email, $groupId, $formId);
 
         $this->subscriptionService->subscribe($subscription);
@@ -93,7 +86,7 @@ class NewsletterController extends ActionController
     {
         $newsletter = [];
 
-        foreach ($this->newsletterSettings ?? [] as $groupId => $item) {
+        foreach ($this->configurationService->getCurrentNewsletters() as $groupId => $item) {
             $newsletter[$groupId] = $item['label'];
         }
 
@@ -108,7 +101,7 @@ class NewsletterController extends ActionController
     public function optoutSubmitAction(RegistrationRequest $receiver): void
     {
         $groupId = $receiver->groupId;
-        $formId = (int)$this->newsletterSettings[$groupId]['formId'];
+        $formId = (int)$this->configurationService->getCurrentNewsletters()[$groupId]['formId'];
         $subscription = new Subscriber($receiver->email, $groupId, $formId);
 
         $this->subscriptionService->unsubscribe($subscription);

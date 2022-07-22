@@ -11,8 +11,6 @@ use Supseven\Cleverreach\Service\ConfigurationService;
 use Supseven\Cleverreach\Tests\LocalBaseTestCase;
 use Supseven\Cleverreach\Validation\Validator\OptinValidator;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
 /**
  * Test the opt in validator
@@ -36,15 +34,9 @@ class OptInValidatorTest extends LocalBaseTestCase
         $api = $this->createMock(ApiService::class);
         $api->expects(self::any())->method('getReceiverOfGroup')->willReturn(null);
 
-        $GLOBALS['TSFE'] = new \stdClass();
-        $GLOBALS['TSFE']->rootLine = [['uid' => 1]];
-
-        $config = $this->createStub(ConfigurationService::class);
-        $config->method('isTestEmail')->willReturn(false);
-
-        GeneralUtility::setSingletonInstance(ConfigurationService::class, $config);
         GeneralUtility::setSingletonInstance(ApiService::class, $api);
-        GeneralUtility::setSingletonInstance(ConfigurationManager::class, $this->getConfigurationManager());
+
+        $this->addConfigurationService();
 
         $subject = new OptinValidator();
         $result = $subject->validate($receiver);
@@ -75,17 +67,11 @@ class OptInValidatorTest extends LocalBaseTestCase
         $api = $this->createMock(ApiService::class);
         $api->expects(self::any())->method('getReceiverOfGroup')->willReturn(null);
 
-        $GLOBALS['TSFE'] = new \stdClass();
-        $GLOBALS['TSFE']->rootLine = [['uid' => 1]];
+        $this->addConfigurationService();
 
         $receiver = new RegistrationRequest('abc@domain.tld', true, 1);
 
-        $config = $this->createStub(ConfigurationService::class);
-        $config->method('isTestEmail')->willReturn(false);
-
-        GeneralUtility::setSingletonInstance(ConfigurationService::class, $config);
         GeneralUtility::setSingletonInstance(ApiService::class, $api);
-        GeneralUtility::setSingletonInstance(ConfigurationManager::class, $this->getConfigurationManager());
 
         $subject = new OptinValidator();
         $result = $subject->validate($receiver);
@@ -97,20 +83,14 @@ class OptInValidatorTest extends LocalBaseTestCase
     {
         $apiResult = new Receiver('', 1234, 0, 12345, []);
 
-        $GLOBALS['TSFE'] = new \stdClass();
-        $GLOBALS['TSFE']->rootLine = [['uid' => 1]];
+        $this->addConfigurationService();
 
         $api = $this->createMock(ApiService::class);
         $api->expects(self::any())->method('getReceiverOfGroup')->willReturn($apiResult);
 
         $receiver = new RegistrationRequest('abc@domain.tld', true, 1);
 
-        $config = $this->createStub(ConfigurationService::class);
-        $config->method('isTestEmail')->willReturn(false);
-
-        GeneralUtility::setSingletonInstance(ConfigurationService::class, $config);
         GeneralUtility::setSingletonInstance(ApiService::class, $api);
-        GeneralUtility::setSingletonInstance(ConfigurationManager::class, $this->getConfigurationManager());
 
         $subject = new OptinValidator();
         $result = $subject->validate($receiver);
@@ -120,23 +100,17 @@ class OptInValidatorTest extends LocalBaseTestCase
         self::assertSame(10005, $error->getCode());
     }
 
-    private function getConfigurationManager(): ConfigurationManager
+    private function addConfigurationService(): void
     {
-        $conf = $this->createMock(ConfigurationManager::class);
-        $conf->expects(self::any())->method('getConfiguration')->with(
-            self::equalTo(ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS),
-            self::equalTo('CleverreachSubscription')
-        )->willReturn([
-            'newsletter' => [
-                '1' => [
-                    '1' => [
-                        'label'  => 'FirstNewsletter',
-                        'formId' => '2',
-                    ],
-                ],
+        $config = $this->createStub(ConfigurationService::class);
+        $config->method('isTestEmail')->willReturn(false);
+        $config->method('getCurrentNewsletters')->willReturn([
+            1 => [
+                'label'  => 'FirstNewsletter',
+                'formId' => '2',
             ],
         ]);
 
-        return $conf;
+        GeneralUtility::setSingletonInstance(ConfigurationService::class, $config);
     }
 }

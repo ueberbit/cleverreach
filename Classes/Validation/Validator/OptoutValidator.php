@@ -8,8 +8,6 @@ use Supseven\Cleverreach\DTO\RegistrationRequest;
 use Supseven\Cleverreach\Service\ApiService;
 use Supseven\Cleverreach\Service\ConfigurationService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 use TYPO3\CMS\Extbase\Validation\Error;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 
@@ -23,14 +21,9 @@ class OptoutValidator extends AbstractValidator
     protected $acceptsEmptyValues = false;
 
     /**
-     * @var ConfigurationManagerInterface
-     */
-    protected $configurationManager;
-
-    /**
      * @var ApiService
      */
-    protected $apiService;
+    protected ApiService $apiService;
 
     /**
      * @var ConfigurationService
@@ -40,7 +33,6 @@ class OptoutValidator extends AbstractValidator
     public function __construct(array $options = [])
     {
         // Workaround for no DI in later extbase. needs a better solution
-        $this->configurationManager = GeneralUtility::makeInstance(ConfigurationManager::class);
         $this->configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
         $this->apiService = GeneralUtility::makeInstance(ApiService::class);
         parent::__construct($options);
@@ -60,19 +52,13 @@ class OptoutValidator extends AbstractValidator
             $this->result->forProperty('email')->addError(new Error('Email invalid', 20002));
         }
 
-        // Workaround for no DI in later extbase. needs a better solution
-        $newsletters = $this->configurationManager->getConfiguration(
-            ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS,
-            'CleverreachSubscription'
-        )['newsletter'] ?? [];
+        $newsletters = $this->configurationService->getCurrentNewsletters();
 
-        $rootUid = $GLOBALS['TSFE']->rootLine[0]['uid'];
-
-        if (!isset($newsletters[$rootUid])) {
+        if (empty($newsletters)) {
             $this->result->forProperty('groupId')->addError(new Error('no group IDs configured', 1594195300));
         }
 
-        if (empty($newsletters[$rootUid][$value->groupId]['formId'])) {
+        if (empty($newsletters[$value->groupId]['formId'])) {
             $this->result->forProperty('groupId')->addError(new Error('unknown newsletter', 20004));
         }
 

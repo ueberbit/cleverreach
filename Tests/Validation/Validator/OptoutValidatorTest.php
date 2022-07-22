@@ -10,8 +10,6 @@ use Supseven\Cleverreach\Service\ConfigurationService;
 use Supseven\Cleverreach\Tests\LocalBaseTestCase;
 use Supseven\Cleverreach\Validation\Validator\OptoutValidator;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManager;
-use TYPO3\CMS\Extbase\Configuration\ConfigurationManagerInterface;
 
 /**
  * @author Georg Großberger <g.grossberger@supseven.at>
@@ -33,15 +31,9 @@ class OptoutValidatorTest extends LocalBaseTestCase
         $api = $this->createMock(ApiService::class);
         $api->expects(self::any())->method('isReceiverOfGroup')->willReturn(true);
 
-        $GLOBALS['TSFE'] = new \stdClass();
-        $GLOBALS['TSFE']->rootLine = [0 => ['uid' => 1]];
+        $this->addConfigurationService();
 
-        $config = $this->createStub(ConfigurationService::class);
-        $config->method('isTestEmail')->willReturn(false);
-
-        GeneralUtility::setSingletonInstance(ConfigurationService::class, $config);
         GeneralUtility::setSingletonInstance(ApiService::class, $api);
-        GeneralUtility::setSingletonInstance(ConfigurationManager::class, $this->getConfigurationManager());
 
         $subject = new OptoutValidator();
         $result = $subject->validate($receiver);
@@ -70,17 +62,11 @@ class OptoutValidatorTest extends LocalBaseTestCase
         $api = $this->createMock(ApiService::class);
         $api->expects(self::any())->method('isReceiverOfGroup')->willReturn(true);
 
-        $GLOBALS['TSFE'] = new \stdClass();
-        $GLOBALS['TSFE']->rootLine = [0 => ['uid' => 1]];
+        $this->addConfigurationService();
 
         $receiver = new RegistrationRequest('abc@domain.tld', true, 1);
 
-        $config = $this->createStub(ConfigurationService::class);
-        $config->method('isTestEmail')->willReturn(false);
-
-        GeneralUtility::setSingletonInstance(ConfigurationService::class, $config);
         GeneralUtility::setSingletonInstance(ApiService::class, $api);
-        GeneralUtility::setSingletonInstance(ConfigurationManager::class, $this->getConfigurationManager());
 
         $subject = new OptoutValidator();
         $result = $subject->validate($receiver);
@@ -93,17 +79,11 @@ class OptoutValidatorTest extends LocalBaseTestCase
         $api = $this->createMock(ApiService::class);
         $api->expects(self::any())->method('isReceiverOfGroup')->willReturn(false);
 
-        $GLOBALS['TSFE'] = new \stdClass();
-        $GLOBALS['TSFE']->rootLine = [0 => ['uid' => 1]];
+        $this->addConfigurationService();
 
         $receiver = new RegistrationRequest('abc@domain.tld', true, 1);
 
-        $config = $this->createStub(ConfigurationService::class);
-        $config->method('isTestEmail')->willReturn(false);
-
-        GeneralUtility::setSingletonInstance(ConfigurationService::class, $config);
         GeneralUtility::setSingletonInstance(ApiService::class, $api);
-        GeneralUtility::setSingletonInstance(ConfigurationManager::class, $this->getConfigurationManager());
 
         $subject = new OptoutValidator();
         $result = $subject->validate($receiver);
@@ -113,23 +93,17 @@ class OptoutValidatorTest extends LocalBaseTestCase
         self::assertSame(20005, $error->getCode());
     }
 
-    private function getConfigurationManager(): ConfigurationManager
+    private function addConfigurationService(): void
     {
-        $conf = $this->createMock(ConfigurationManager::class);
-        $conf->expects(self::any())->method('getConfiguration')->with(
-            self::equalTo(ConfigurationManagerInterface::CONFIGURATION_TYPE_SETTINGS),
-            self::equalTo('CleverreachSubscription')
-        )->willReturn([
-            'newsletter' => [
-                '1' => [
-                    '1' => [
-                        'label'  => 'FirstNewsletter',
-                        'formId' => '2',
-                    ],
-                ],
+        $config = $this->createStub(ConfigurationService::class);
+        $config->method('isTestEmail')->willReturn(false);
+        $config->method('getCurrentNewsletters')->willReturn([
+            1 => [
+                'label'  => 'FirstNewsletter',
+                'formId' => '2',
             ],
         ]);
 
-        return $conf;
+        GeneralUtility::setSingletonInstance(ConfigurationService::class, $config);
     }
 }

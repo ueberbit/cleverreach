@@ -89,4 +89,23 @@ class ConfigurationService implements SingletonInterface
 
         return $email && $testMail && $email === $testMail;
     }
+
+    public function getCurrentNewsletters(): ?array
+    {
+        return $this->getNewsletters((int)$GLOBALS['TSFE']->rootLine[0]['uid']);
+    }
+
+    public function getNewsletters(int $uid): ?array
+    {
+        $found = $this->getConfiguration()['newsletter.'][$uid . '.'] ?? null;
+        $result = [];
+
+        if (is_array($found)) {
+            foreach ($found as $k => $v) {
+                $result[(int)trim($k, '.')] = $v;
+            }
+        }
+
+        return $result;
+    }
 }
