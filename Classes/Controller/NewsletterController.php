@@ -64,10 +64,14 @@ class NewsletterController extends ActionController
 
     /**
      * @Validate(validator="\Supseven\Cleverreach\Validation\Validator\OptinValidator", param="receiver")
-     * @param RegistrationRequest $receiver
+     * @param RegistrationRequest|null $receiver
      */
-    public function optinSubmitAction(RegistrationRequest $receiver): void
+    public function optinSubmitAction(?RegistrationRequest $receiver = null): void
     {
+        if (!$receiver) {
+            $this->redirect('optinForm');
+        }
+
         $groupId = $receiver->groupId;
         $formId = (int)$this->configurationService->getCurrentNewsletters()[$groupId]['formId'];
         $subscription = new Subscriber($receiver->email, $groupId, $formId);
@@ -96,10 +100,14 @@ class NewsletterController extends ActionController
 
     /**
      * @Validate(validator="\Supseven\Cleverreach\Validation\Validator\OptoutValidator", param="receiver")
-     * @param RegistrationRequest $receiver
+     * @param RegistrationRequest|null $receiver
      */
-    public function optoutSubmitAction(RegistrationRequest $receiver): void
+    public function optoutSubmitAction(?RegistrationRequest $receiver = null): void
     {
+        if (!$receiver) {
+            $this->redirect('optinForm');
+        }
+
         $groupId = $receiver->groupId;
         $formId = (int)$this->configurationService->getCurrentNewsletters()[$groupId]['formId'];
         $subscription = new Subscriber($receiver->email, $groupId, $formId);
