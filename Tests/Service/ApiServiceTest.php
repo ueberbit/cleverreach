@@ -63,7 +63,7 @@ class ApiServiceTest extends LocalBaseTestCase
             $expectedList[] = (Receiver::create($receivers))->toArray();
         }
 
-        $result = ['status' => 'insert success'];
+        $result = [['status' => 'insert success']];
 
         $rest = $this->createMock(RestService::class);
         $rest->expects(self::once())->method('post')->with(

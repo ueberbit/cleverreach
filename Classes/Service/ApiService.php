@@ -85,8 +85,10 @@ class ApiService implements SingletonInterface
                 $receiversList
             );
 
-            if (is_array($return) && $return['status'] === 'insert success') {
-                return true;
+            if (is_array($return)) {
+                $status = $return[0]['status'] ?? '';
+
+                return $status === 'insert success' || str_starts_with($status, 'duplicate address');
             }
         } catch (GuzzleException $ex) {
             $this->logger->alert('cannot add receivers to group: ' . $ex->getMessage(), [$ex, $receiversList]);
