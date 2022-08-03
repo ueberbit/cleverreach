@@ -242,9 +242,9 @@ class ApiService implements SingletonInterface
         $groupId ??= $this->configurationService->getGroupId();
         $formId ??= $this->configurationService->getFormId();
         $doidata = [
-            'user_ip'    => $_SERVER['REMOTE_ADDR'],
-            'user_agent' => $_SERVER['HTTP_USER_AGENT'],
-            'referer'    => $_SERVER['HTTP_REFERER'],
+            'user_ip'    => $_SERVER['REMOTE_ADDR'] ?? '',
+            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
+            'referer'    => $_SERVER['HTTP_REFERER'] ?? '',
         ];
 
         try {

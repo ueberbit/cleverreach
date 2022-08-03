@@ -286,6 +286,31 @@ class ApiServiceTest extends LocalBaseTestCase
         $subject->sendSubscribeMail($email, $formId, $groupId);
     }
 
+    public function testSendSubscribeMailDoesNotFailOnEmptyServerVars(): void
+    {
+        $email = 'someone@domain.tld';
+        $groupId = 123;
+        $formId = 789;
+
+        $rest = $this->createMock(RestService::class);
+        $rest->expects(self::once())->method('post')->with(
+            self::equalTo('/forms.json/' . $formId . '/send/activate'),
+            self::equalTo([
+                'email'     => $email,
+                'groups_id' => $groupId,
+                'doidata'   => [
+                    'user_ip'    => '',
+                    'user_agent' => '',
+                    'referer'    => '',
+                ],
+            ])
+        );
+
+        $subject = new ApiService($this->getConfiguration(), $rest, new NullLogger());
+        $subject->disableConnect();
+        $subject->sendSubscribeMail($email, $formId, $groupId);
+    }
+
     public function testSendUnsubscribeMail(): void
     {
         $_SERVER['REMOTE_ADDR'] = '1.2.3.4';
@@ -305,6 +330,31 @@ class ApiServiceTest extends LocalBaseTestCase
                     'user_ip'    => $_SERVER['REMOTE_ADDR'],
                     'user_agent' => $_SERVER['HTTP_USER_AGENT'],
                     'referer'    => $_SERVER['HTTP_REFERER'],
+                ],
+            ])
+        );
+
+        $subject = new ApiService($this->getConfiguration(), $rest, new NullLogger());
+        $subject->disableConnect();
+        $subject->sendUnsubscribeMail($email, $formId, $groupId);
+    }
+
+    public function testSendUnsubscribeMailDoesNotFailOnEmptyServerVars(): void
+    {
+        $email = 'someone@domain.tld';
+        $groupId = 123;
+        $formId = 789;
+
+        $rest = $this->createMock(RestService::class);
+        $rest->expects(self::once())->method('post')->with(
+            self::equalTo('/forms.json/' . $formId . '/send/deactivate'),
+            self::equalTo([
+                'email'     => $email,
+                'groups_id' => $groupId,
+                'doidata'   => [
+                    'user_ip'    => '',
+                    'user_agent' => '',
+                    'referer'    => '',
                 ],
             ])
         );
