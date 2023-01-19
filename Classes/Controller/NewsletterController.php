@@ -56,6 +56,7 @@ class NewsletterController extends ActionController
             $newsletter[$groupId] = $item['label'];
         }
 
+        $this->view->assign('data', $this->configurationManager->getContentObject()->data);
         $this->view->assign('receiver', $receiver ?? new RegistrationRequest());
         $this->view->assign('newsletter', $newsletter);
 
@@ -94,6 +95,7 @@ class NewsletterController extends ActionController
             $newsletter[$groupId] = $item['label'];
         }
 
+        $this->view->assign('data', $this->configurationManager->getContentObject()->data);
         $this->view->assign('receiver', $receiver ?? new RegistrationRequest());
         $this->view->assign('newsletter', $newsletter);
     }
