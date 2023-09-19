@@ -9,18 +9,12 @@ use Supseven\Cleverreach\Service\ApiService;
 use Supseven\Cleverreach\Service\ConfigurationService;
 use Supseven\Cleverreach\Tests\LocalBaseTestCase;
 use Supseven\Cleverreach\Validation\Validator\OptoutValidator;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * @author Georg Großberger <g.grossberger@supseven.at>
  */
 class OptoutValidatorTest extends LocalBaseTestCase
 {
-    protected function tearDown(): void
-    {
-        GeneralUtility::purgeInstances();
-    }
-
     /**
      * @dataProvider validateDataProvider
      * @param RegistrationRequest $receiver
@@ -31,11 +25,7 @@ class OptoutValidatorTest extends LocalBaseTestCase
         $api = $this->createMock(ApiService::class);
         $api->expects(self::any())->method('isReceiverOfGroup')->willReturn(true);
 
-        $this->addConfigurationService();
-
-        GeneralUtility::setSingletonInstance(ApiService::class, $api);
-
-        $subject = new OptoutValidator();
+        $subject = new OptoutValidator($api, $this->getConfigrationServiceStub());
         $result = $subject->validate($receiver);
         $errors = $result->getFlattenedErrors();
         $error = current(current($errors));
@@ -62,13 +52,9 @@ class OptoutValidatorTest extends LocalBaseTestCase
         $api = $this->createMock(ApiService::class);
         $api->expects(self::any())->method('isReceiverOfGroup')->willReturn(true);
 
-        $this->addConfigurationService();
-
         $receiver = new RegistrationRequest('abc@domain.tld', true, 1);
 
-        GeneralUtility::setSingletonInstance(ApiService::class, $api);
-
-        $subject = new OptoutValidator();
+        $subject = new OptoutValidator($api, $this->getConfigrationServiceStub());
         $result = $subject->validate($receiver);
 
         self::assertSame([], $result->getFlattenedErrors());
@@ -79,13 +65,9 @@ class OptoutValidatorTest extends LocalBaseTestCase
         $api = $this->createMock(ApiService::class);
         $api->expects(self::any())->method('isReceiverOfGroup')->willReturn(false);
 
-        $this->addConfigurationService();
-
         $receiver = new RegistrationRequest('abc@domain.tld', true, 1);
 
-        GeneralUtility::setSingletonInstance(ApiService::class, $api);
-
-        $subject = new OptoutValidator();
+        $subject = new OptoutValidator($api, $this->getConfigrationServiceStub());
         $result = $subject->validate($receiver);
         $errors = $result->getFlattenedErrors();
         $error = current(current($errors));
@@ -93,7 +75,7 @@ class OptoutValidatorTest extends LocalBaseTestCase
         self::assertSame(20005, $error->getCode());
     }
 
-    private function addConfigurationService(): void
+    private function getConfigrationServiceStub()
     {
         $config = $this->createStub(ConfigurationService::class);
         $config->method('isTestEmail')->willReturn(false);
@@ -104,6 +86,6 @@ class OptoutValidatorTest extends LocalBaseTestCase
             ],
         ]);
 
-        GeneralUtility::setSingletonInstance(ConfigurationService::class, $config);
+        return $config;
     }
 }

@@ -24,10 +24,10 @@ class OptinValidatorTest extends LocalBaseTestCase
         )->willReturn(false);
 
         $subject = new OptinValidator(
-            $options,
             $apiService,
-            $this->getConfiguration()
+            $this->getConfiguration(),
         );
+        $subject->setOptions($options);
         $result = $subject->validate($email);
 
         self::assertFalse($result->hasErrors());
@@ -44,7 +44,6 @@ class OptinValidatorTest extends LocalBaseTestCase
         )->willReturn(true);
 
         $subject = new class (
-            $options,
             $apiService,
             $this->getConfiguration()
         ) extends OptinValidator {
@@ -53,6 +52,7 @@ class OptinValidatorTest extends LocalBaseTestCase
                 return (string)$translateKey;
             }
         };
+        $subject->setOptions($options);
         $result = $subject->validate($email);
 
         self::assertTrue($result->hasErrors());
@@ -66,7 +66,6 @@ class OptinValidatorTest extends LocalBaseTestCase
         $apiService->expects(self::never())->method('isReceiverOfGroupAndActive');
 
         $subject = new class (
-            $options,
             $apiService,
             $this->getConfiguration()
         ) extends OptinValidator {
@@ -75,6 +74,7 @@ class OptinValidatorTest extends LocalBaseTestCase
                 return (string)$translateKey;
             }
         };
+        $subject->setOptions($options);
         $result = $subject->validate($email);
 
         self::assertTrue($result->hasErrors());

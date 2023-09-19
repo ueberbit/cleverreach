@@ -10,7 +10,6 @@ use Supseven\Cleverreach\Service\ApiService;
 use Supseven\Cleverreach\Service\ConfigurationService;
 use Supseven\Cleverreach\Tests\LocalBaseTestCase;
 use Supseven\Cleverreach\Validation\Validator\OptinValidator;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Test the opt in validator
@@ -19,11 +18,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class OptInValidatorTest extends LocalBaseTestCase
 {
-    protected function tearDown(): void
-    {
-        GeneralUtility::purgeInstances();
-    }
-
     /**
      * @dataProvider validateDataProvider
      * @param RegistrationRequest $receiver
@@ -34,11 +28,7 @@ class OptInValidatorTest extends LocalBaseTestCase
         $api = $this->createMock(ApiService::class);
         $api->expects(self::any())->method('getReceiverOfGroup')->willReturn(null);
 
-        GeneralUtility::setSingletonInstance(ApiService::class, $api);
-
-        $this->addConfigurationService();
-
-        $subject = new OptinValidator();
+        $subject = new OptinValidator($api, $this->getConfigurationServiceStub());
         $result = $subject->validate($receiver);
         $errors = $result->getFlattenedErrors();
         $error = current(current($errors));
@@ -67,13 +57,9 @@ class OptInValidatorTest extends LocalBaseTestCase
         $api = $this->createMock(ApiService::class);
         $api->expects(self::any())->method('getReceiverOfGroup')->willReturn(null);
 
-        $this->addConfigurationService();
-
         $receiver = new RegistrationRequest('abc@domain.tld', true, 1);
 
-        GeneralUtility::setSingletonInstance(ApiService::class, $api);
-
-        $subject = new OptinValidator();
+        $subject = new OptinValidator($api, $this->getConfigurationServiceStub());
         $result = $subject->validate($receiver);
 
         self::assertSame([], $result->getFlattenedErrors());
@@ -83,16 +69,12 @@ class OptInValidatorTest extends LocalBaseTestCase
     {
         $apiResult = new Receiver('', 1234, 0, 12345, []);
 
-        $this->addConfigurationService();
-
         $api = $this->createMock(ApiService::class);
         $api->expects(self::any())->method('getReceiverOfGroup')->willReturn($apiResult);
 
         $receiver = new RegistrationRequest('abc@domain.tld', true, 1);
 
-        GeneralUtility::setSingletonInstance(ApiService::class, $api);
-
-        $subject = new OptinValidator();
+        $subject = new OptinValidator($api, $this->getConfigurationServiceStub());
         $result = $subject->validate($receiver);
         $errors = $result->getFlattenedErrors();
         $error = current(current($errors));
@@ -100,7 +82,10 @@ class OptInValidatorTest extends LocalBaseTestCase
         self::assertSame(10005, $error->getCode());
     }
 
-    private function addConfigurationService(): void
+    /**
+     * @return \PHPUnit\Framework\MockObject\Stub&ConfigurationService
+     */
+    private function getConfigurationServiceStub()
     {
         $config = $this->createStub(ConfigurationService::class);
         $config->method('isTestEmail')->willReturn(false);
@@ -111,6 +96,6 @@ class OptInValidatorTest extends LocalBaseTestCase
             ],
         ]);
 
-        GeneralUtility::setSingletonInstance(ConfigurationService::class, $config);
+        return $config;
     }
 }

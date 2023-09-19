@@ -20,9 +20,9 @@
         "wapplersystems/cleverreach": "<10"
     },
     "require": {
-        "typo3/cms-core": "^11.5",
-        "typo3/cms-extbase": "^11.5",
-        "typo3/cms-frontend": "^11.5"
+        "typo3/cms-core": "^12.4",
+        "typo3/cms-extbase": "^12.4",
+        "typo3/cms-frontend": "^12.4"
     },
     "autoload": {
         "psr-4": {
@@ -41,8 +41,13 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.8",
-        "in2code/powermail": "^9.0",
-        "typo3/cms-form": "^11.5",
+        "typo3/cms-form": "^12.4",
         "phpunit/phpunit": "^9.5"
+    },
+    "config": {
+        "allow-plugins": {
+            "typo3/cms-composer-installers": false,
+            "typo3/class-alias-loader": false
+        }
     }
 }

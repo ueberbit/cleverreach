@@ -30,24 +30,14 @@ use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
  */
 class OptoutValidator extends AbstractValidator
 {
-    /**
-     * @var ConfigurationService
-     */
-    private ConfigurationService $configurationService;
+    protected $supportedOptions = [
+        'groupId' => [0, 'Group ID', 'integer'],
+    ];
 
-    /**
-     * @var ApiService
-     */
-    private ApiService $apiService;
-
-    public function __construct(array $options = [], ?ApiService $apiService = null, ?ConfigurationService $configurationService = null)
-    {
-        $this->apiService = $apiService ?? GeneralUtility::makeInstance(ApiService::class);
-        $this->configurationService = $configurationService ?? GeneralUtility::makeInstance(ConfigurationService::class);
-        $this->supportedOptions = [
-            'groupId' => [0, 'Group ID', 'integer'],
-        ];
-        parent::__construct($options);
+    public function __construct(
+        private readonly ApiService $apiService,
+        private readonly ConfigurationService $configurationService
+    ) {
     }
 
     /**

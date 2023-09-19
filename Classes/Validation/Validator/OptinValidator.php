@@ -7,7 +7,6 @@ namespace Supseven\Cleverreach\Validation\Validator;
 use Supseven\Cleverreach\DTO\RegistrationRequest;
 use Supseven\Cleverreach\Service\ApiService;
 use Supseven\Cleverreach\Service\ConfigurationService;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Validation\Error;
 use TYPO3\CMS\Extbase\Validation\Validator\AbstractValidator;
 
@@ -20,22 +19,10 @@ class OptinValidator extends AbstractValidator
 {
     protected $acceptsEmptyValues = false;
 
-    /**
-     * @var ApiService
-     */
-    protected ApiService $apiService;
-
-    /**
-     * @var ConfigurationService
-     */
-    protected ConfigurationService $configurationService;
-
-    public function __construct(array $options = [])
-    {
-        // Workaround for no DI in later extbase. needs a better solution
-        $this->configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
-        $this->apiService = GeneralUtility::makeInstance(ApiService::class);
-        parent::__construct($options);
+    public function __construct(
+        private readonly ApiService $apiService,
+        private readonly ConfigurationService $configurationService
+    ) {
     }
 
     protected function isValid($value): void

@@ -18,7 +18,10 @@ class LocalBaseTestCase extends TestCase
         $GLOBALS['EXEC_TIME'] = 123456789;
     }
 
-    protected function getConfiguration(): ConfigurationService & Stub
+    /**
+     * @return Stub&ConfigurationService
+     */
+    protected function getConfiguration()
     {
         $config = $this->createStub(ConfigurationService::class);
         $config->method('getRestUrl')->willReturn('https://api.cleverreach.com');
