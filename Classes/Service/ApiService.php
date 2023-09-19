@@ -73,7 +73,7 @@ class ApiService implements SingletonInterface
         $receiversList = match (true) {
             $receivers instanceof Receiver => [$receivers->toArray()],
             is_array($receivers)           => array_map(
-                static fn (Receiver $r)    => $r->toArray(),
+                static fn (Receiver $r) => $r->toArray(),
                 (array)array_filter($receivers, static fn ($r) => $r instanceof Receiver)
             ),
             default => [(Receiver::create((string)$receivers))->toArray()],
