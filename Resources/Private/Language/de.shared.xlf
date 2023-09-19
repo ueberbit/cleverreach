@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.2" xmlns:t3="http://typo3.org/schemas/xliff" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-	<file source-language="en" target-language="de" original="messages" datatype="plaintext" product-name="cleverreach" date="2022-07-14T15:12:06+02:00">
+	<file source-language="en" target-language="de" original="messages" datatype="plaintext" product-name="cleverreach" date="2023-09-19T14:55:29+02:00">
 		<header></header>
 		<body>
 			<trans-unit id="validator.alreadyInList" resname="validator.alreadyInList">
@@ -29,7 +29,7 @@
 			</trans-unit>
 			<trans-unit id="agreed.label" resname="agreed.label">
 				<source>I agree that my personal data will be stored and processed by %s. I have the right to withdraw my consent to personal data processing anytime by e-mail or letter to %s. I have read the &lt;a href=&#34;%s&#34; target=&#34;_blank&#34;&gt;%s&lt;/a&gt; for further information about data processing and my rights.</source>
-				<target>Ich bin damit einverstanden, dass meine Daten von der %s gespeichert und verwendet werden dürfen. Ich kann jederzeit meine Zustimmung per E-Mail oder Brief an die %s widerrufen. Weitere Informationen zur Verarbeitung meiner Daten sowie zu meinen Rechten habe ich der &lt;a href=&#34;%s&#34; target=&#34;_blank&#34;&gt;%s&lt;/a&gt; entnommen.</target>
+				<target>Ich bin damit einverstanden, dass meine Daten von %s gespeichert und verwendet werden dürfen. Ich kann jederzeit meine Zustimmung per E-Mail oder Brief an %s widerrufen. Weitere Informationen zur Verarbeitung meiner Daten sowie zu meinen Rechten habe ich der &lt;a href=&#34;%s&#34; target=&#34;_blank&#34;&gt;%s&lt;/a&gt; entnommen.</target>
 			</trans-unit>
 			<trans-unit id="btn.subscribe" resname="btn.subscribe">
 				<source>Subscribe</source>
@@ -87,19 +87,19 @@
 				<source>The e-mail address was not accepted</source>
 				<target>Die angegebene E-Mail Adresse wurde nicht akzeptiert</target>
 			</trans-unit>
-			<trans-unit id="plugin.cleverreach_pi1.title" resname="plugin.cleverreach_pi1.title">
+			<trans-unit id="plugin.cleverreach_optin.title" resname="plugin.cleverreach_optin.title">
 				<source>Newsletter Register Opt-In</source>
 				<target>Newsletter Registrierung Opt-In</target>
 			</trans-unit>
-			<trans-unit id="plugin.cleverreach_pi1.description" resname="plugin.cleverreach_pi1.description">
+			<trans-unit id="plugin.cleverreach_optin.description" resname="plugin.cleverreach_optin.description">
 				<source>Registration for a newsletter with double opt-in</source>
 				<target>Registrierung für einen Newsletter mit Double Opt-In</target>
 			</trans-unit>
-			<trans-unit id="plugin.cleverreach_pi2.title" resname="plugin.cleverreach_pi2.title">
+			<trans-unit id="plugin.cleverreach_optout.title" resname="plugin.cleverreach_optout.title">
 				<source>Newsletter Opt-Out</source>
 				<target>Newsletter Opt-Out</target>
 			</trans-unit>
-			<trans-unit id="plugin.cleverreach_pi2.description" resname="plugin.cleverreach_pi2.description">
+			<trans-unit id="plugin.cleverreach_optout.description" resname="plugin.cleverreach_optout.description">
 				<source>Unscribe from a newsletter with doble opt-out</source>
 				<target>Abmeldung von einem Newsletter mit Double-Opt-Out</target>
 			</trans-unit>

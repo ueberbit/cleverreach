@@ -1,23 +1,22 @@
-mod.wizards.newContentElement.wizardItems.plugins {
+mod.wizards.newContentElement.wizardItems.newsletter {
+    header = LLL:EXT:cleverreach/Resources/Private/Language/shared.xlf:wizard.tab.header
     elements {
-        cleverreach_pi1 {
+        cleverreach_optin {
             iconIdentifier = cleverreach
-            title = LLL:EXT:cleverreach/Resources/Private/Language/shared.xlf:plugin.cleverreach_pi1.title
-            description = LLL:EXT:cleverreach/Resources/Private/Language/shared.xlf:plugin.cleverreach_pi1.description
+            title = LLL:EXT:cleverreach/Resources/Private/Language/shared.xlf:plugin.cleverreach_optin.title
+            description = LLL:EXT:cleverreach/Resources/Private/Language/shared.xlf:plugin.cleverreach_optin.description
             tt_content_defValues {
-                CType = list
-                list_type = cleverreach_pi1
+                CType = cleverreach_optin
             }
         }
-        cleverreach_pi2 {
+        cleverreach_optout {
             iconIdentifier = cleverreach
-            title = LLL:EXT:cleverreach/Resources/Private/Language/shared.xlf:plugin.cleverreach_pi2.title
-            description = LLL:EXT:cleverreach/Resources/Private/Language/shared.xlf:plugin.cleverreach_pi2.description
+            title = LLL:EXT:cleverreach/Resources/Private/Language/shared.xlf:plugin.cleverreach_optout.title
+            description = LLL:EXT:cleverreach/Resources/Private/Language/shared.xlf:plugin.cleverreach_optout.description
             tt_content_defValues {
-                CType = list
-                list_type = cleverreach_pi2
+                CType = cleverreach_optout
             }
         }
     }
-    show := addToList(cleverreach_pi1,cleverreach_pi2)
+    show = *
 }

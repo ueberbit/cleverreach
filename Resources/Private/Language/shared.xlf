@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.2" xmlns:t3="http://typo3.org/schemas/xliff" xmlns="urn:oasis:names:tc:xliff:document:1.2">
-	<file source-language="en" original="messages" datatype="plaintext" product-name="cleverreach" date="2022-07-14T15:12:06+02:00">
+	<file source-language="en" original="messages" datatype="plaintext" product-name="cleverreach" date="2023-09-19T14:55:29+02:00">
 		<header></header>
 		<body>
 			<trans-unit id="validator.alreadyInList" resname="validator.alreadyInList">
@@ -66,17 +66,20 @@
 			<trans-unit id="error.20005" resname="error.20005">
 				<source>The e-mail address was not accepted</source>
 			</trans-unit>
-			<trans-unit id="plugin.cleverreach_pi1.title" resname="plugin.cleverreach_pi1.title">
+			<trans-unit id="plugin.cleverreach_optin.title" resname="plugin.cleverreach_optin.title">
 				<source>Newsletter Register Opt-In</source>
 			</trans-unit>
-			<trans-unit id="plugin.cleverreach_pi1.description" resname="plugin.cleverreach_pi1.description">
+			<trans-unit id="plugin.cleverreach_optin.description" resname="plugin.cleverreach_optin.description">
 				<source>Registration for a newsletter with double opt-in</source>
 			</trans-unit>
-			<trans-unit id="plugin.cleverreach_pi2.title" resname="plugin.cleverreach_pi2.title">
+			<trans-unit id="plugin.cleverreach_optout.title" resname="plugin.cleverreach_optout.title">
 				<source>Newsletter Opt-Out</source>
 			</trans-unit>
-			<trans-unit id="plugin.cleverreach_pi2.description" resname="plugin.cleverreach_pi2.description">
+			<trans-unit id="plugin.cleverreach_optout.description" resname="plugin.cleverreach_optout.description">
 				<source>Unscribe from a newsletter with doble opt-out</source>
+			</trans-unit>
+			<trans-unit id="wizard.tab.header" resname="wizard.tab.header">
+				<source>Newsletter</source>
 			</trans-unit>
 		</body>
 	</file>
