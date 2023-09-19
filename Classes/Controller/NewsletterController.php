@@ -20,27 +20,10 @@ use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
  */
 class NewsletterController extends ActionController
 {
-    /**
-     * @var SubscriptionService
-     */
-    protected SubscriptionService $subscriptionService;
-
-    protected ConfigurationService $configurationService;
-
-    /**
-     * @param SubscriptionService $subscriptionService
-     */
-    public function injectSubscriptionService(SubscriptionService $subscriptionService): void
-    {
-        $this->subscriptionService = $subscriptionService;
-    }
-
-    /**
-     * @param ConfigurationService $configurationService
-     */
-    public function injectConfigurationService(ConfigurationService $configurationService): void
-    {
-        $this->configurationService = $configurationService;
+    public function __construct(
+        private readonly SubscriptionService $subscriptionService,
+        private readonly ConfigurationService $configurationService,
+    ) {
     }
 
     /**
@@ -50,11 +33,7 @@ class NewsletterController extends ActionController
      */
     public function optinFormAction(?RegistrationRequest $receiver = null): ResponseInterface
     {
-        $newsletter = [];
-
-        foreach ($this->configurationService->getCurrentNewsletters() as $groupId => $item) {
-            $newsletter[$groupId] = $item['label'];
-        }
+        $newsletter = $this->getNewsletters();
 
         $this->view->assign('data', $this->configurationManager->getContentObject()->data);
         $this->view->assign('receiver', $receiver ?? new RegistrationRequest());
@@ -66,8 +45,9 @@ class NewsletterController extends ActionController
     /**
      * @Validate(validator="\Supseven\Cleverreach\Validation\Validator\OptinValidator", param="receiver")
      * @param RegistrationRequest|null $receiver
+     * @return ResponseInterface
      */
-    public function optinSubmitAction(?RegistrationRequest $receiver = null): void
+    public function optinSubmitAction(?RegistrationRequest $receiver = null): ResponseInterface
     {
         if (!$receiver) {
             $this->redirect('optinForm');
@@ -80,34 +60,35 @@ class NewsletterController extends ActionController
         $this->subscriptionService->subscribe($subscription);
 
         $uri = $this->uriBuilder->reset()->setCreateAbsoluteUri(true)->setTargetPageUid((int)$this->settings['redirect']['optin'])->build();
-        $this->redirectToUri($uri);
+
+        return $this->redirectToUri($uri);
     }
 
     /**
      * @IgnoreValidation("receiver")
      * @param RegistrationRequest|null $receiver
+     * @return ResponseInterface
      */
-    public function optoutFormAction(?RegistrationRequest $receiver = null): void
+    public function optoutFormAction(?RegistrationRequest $receiver = null): ResponseInterface
     {
-        $newsletter = [];
-
-        foreach ($this->configurationService->getCurrentNewsletters() as $groupId => $item) {
-            $newsletter[$groupId] = $item['label'];
-        }
+        $newsletter = $this->getNewsletters();
 
         $this->view->assign('data', $this->configurationManager->getContentObject()->data);
         $this->view->assign('receiver', $receiver ?? new RegistrationRequest());
         $this->view->assign('newsletter', $newsletter);
+
+        return $this->htmlResponse();
     }
 
     /**
      * @Validate(validator="\Supseven\Cleverreach\Validation\Validator\OptoutValidator", param="receiver")
      * @param RegistrationRequest|null $receiver
+     * @return ResponseInterface
      */
-    public function optoutSubmitAction(?RegistrationRequest $receiver = null): void
+    public function optoutSubmitAction(?RegistrationRequest $receiver = null): ResponseInterface
     {
         if (!$receiver) {
-            $this->redirect('optinForm');
+            return $this->redirect('optinForm');
         }
 
         $groupId = $receiver->groupId;
@@ -117,6 +98,21 @@ class NewsletterController extends ActionController
         $this->subscriptionService->unsubscribe($subscription);
 
         $uri = $this->uriBuilder->reset()->setCreateAbsoluteUri(true)->setTargetPageUid((int)$this->settings['redirect']['optout'])->build();
-        $this->redirectToUri($uri);
+
+        return $this->redirectToUri($uri);
+    }
+
+    /**
+     * @return array
+     */
+    private function getNewsletters(): array
+    {
+        $newsletter = [];
+
+        foreach ($this->configurationService->getCurrentNewsletters() as $groupId => $item) {
+            $newsletter[$groupId] = $item['label'];
+        }
+
+        return $newsletter;
     }
 }
