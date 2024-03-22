@@ -12,7 +12,7 @@ plugin.tx_cleverreach {
     # cat=plugin.tx_cleverreach//c; type=string; label=Group name: Name of the newsletter / the group.
     groupName =
     # cat=plugin.tx_cleverreach//d; type=string; label=REST URL: Full REST API endpoint
-    restUrl = https://rest.cleverreach.com/v2
+    restUrl = https://rest.cleverreach.com/v3
 
     # cat=plugin.tx_cleverreach//g; type=string; label=Token url
     oauthTokenUrl = https://rest.cleverreach.com/oauth/token.php
