@@ -1,53 +1,54 @@
 {
-    "name": "supseven/cleverreach",
-    "description": "CleverReach plugin as well as finishers and validators for EXT:form and EXT:powermail",
-    "type": "typo3-cms-extension",
-    "license": "GPL-2.0-or-later",
-    "authors": [
-        {
-            "name": "supseven",
-            "email": "office@supseven.at",
-            "homepage": "https://www.supseven.at/"
-        },
-        {
-            "name": "Wappler Systems",
-            "email": "info@wappler.systems",
-            "homepage": "https://wappler.systems"
-        }
-    ],
-    "replace": {
-        "svewap/cleverreach": "<10",
-        "wapplersystems/cleverreach": "<10"
+  "name": "supseven/cleverreach",
+  "description": "CleverReach plugin as well as finishers and validators for EXT:form and EXT:powermail",
+  "type": "typo3-cms-extension",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "supseven",
+      "email": "office@supseven.at",
+      "homepage": "https://www.supseven.at/"
     },
-    "require": {
-        "typo3/cms-core": "^12.4",
-        "typo3/cms-extbase": "^12.4",
-        "typo3/cms-frontend": "^12.4"
-    },
-    "autoload": {
-        "psr-4": {
-            "Supseven\\Cleverreach\\": "Classes/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Supseven\\Cleverreach\\Tests\\": "Tests/"
-        }
-    },
-    "extra": {
-        "typo3/cms": {
-            "extension-key": "cleverreach"
-        }
-    },
-    "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.8",
-        "typo3/cms-form": "^12.4",
-        "phpunit/phpunit": "^9.5"
-    },
-    "config": {
-        "allow-plugins": {
-            "typo3/cms-composer-installers": false,
-            "typo3/class-alias-loader": false
-        }
+    {
+      "name": "Wappler Systems",
+      "email": "info@wappler.systems",
+      "homepage": "https://wappler.systems"
     }
+  ],
+  "replace": {
+    "svewap/cleverreach": "<10",
+    "wapplersystems/cleverreach": "<10"
+  },
+  "require": {
+    "typo3/cms-core": "^12.4",
+    "typo3/cms-extbase": "^12.4",
+    "typo3/cms-frontend": "^12.4",
+    "ext-curl": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Supseven\\Cleverreach\\": "Classes/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Supseven\\Cleverreach\\Tests\\": "Tests/"
+    }
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "cleverreach"
+    }
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.8",
+    "typo3/cms-form": "^12.4",
+    "phpunit/phpunit": "^9.5"
+  },
+  "config": {
+    "allow-plugins": {
+      "typo3/cms-composer-installers": false,
+      "typo3/class-alias-loader": false
+    }
+  }
 }

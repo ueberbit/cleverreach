@@ -108,4 +108,23 @@ class ConfigurationService implements SingletonInterface
 
         return $result;
     }
+
+    public function getOAuthTokenUrl(): string
+    {
+        $config = $this->getConfiguration();
+        return $config['oauthTokenUrl'];
+    }
+
+    public function getOAuthClientId(): string
+    {
+        $config = $this->getConfiguration();
+        return $config['oauthClientId'];
+    }
+
+    public function getOAuthClientSecret(): string
+    {
+
+        $config = $this->getConfiguration();
+        return $config['oauthClientSecret'];
+    }
 }

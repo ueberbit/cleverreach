@@ -24,9 +24,10 @@ class ApiService implements SingletonInterface
      */
     public function __construct(
         private readonly ConfigurationService $configurationService,
-        private readonly RestService $rest,
-        private readonly LoggerInterface $logger
-    ) {
+        private readonly RestService          $rest,
+        private readonly LoggerInterface      $logger
+    )
+    {
     }
 
     public function disableConnect(): void
@@ -43,15 +44,40 @@ class ApiService implements SingletonInterface
         $this->rest->setUrl($this->configurationService->getRestUrl());
 
         try {
-            //skip this part if you have an OAuth access token
-            $token = $this->rest->post(
-                '/login',
-                [
-                    'client_id' => $this->configurationService->getClientId(),
-                    'login'     => $this->configurationService->getLoginName(),
-                    'password'  => $this->configurationService->getPassword(),
-                ]
-            );
+            $token = '';
+
+            if (!empty($this->configurationService->getOAuthClientId())
+                && !empty($this->configurationService->getOAuthClientSecret())) {
+                $curl = curl_init();
+                curl_setopt($curl, CURLOPT_URL, $this->configurationService->getOAuthTokenUrl());
+                curl_setopt(
+                    $curl,
+                    CURLOPT_USERPWD,
+                    $this->configurationService->getOAuthClientId() . ":" . $this->configurationService->getOAuthClientSecret());
+                curl_setopt($curl, CURLOPT_POSTFIELDS, ["grant_type" => "client_credentials"]);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                $result = curl_exec($curl);
+                curl_close($curl);
+
+                if ($result) {
+                    $data = json_decode($result);
+
+                    if (!empty($data->access_token)) {
+                        $token = $data->access_token;
+                    }
+                }
+            }
+
+            if (empty($token)) {
+                //skip this part if you have an OAuth access token
+                $token = $this->rest->post('/login',
+                    [
+                        'client_id' => $this->configurationService->getClientId(),
+                        'login' => $this->configurationService->getLoginName(),
+                        'password' => $this->configurationService->getPassword()
+                    ]
+                );
+            }
             $this->rest->setBearerToken($token);
             $this->connected = true;
         } catch (GuzzleException $ex) {
@@ -72,9 +98,9 @@ class ApiService implements SingletonInterface
         $groupId ??= $this->configurationService->getGroupId();
         $receiversList = match (true) {
             $receivers instanceof Receiver => [$receivers->toArray()],
-            is_array($receivers)           => array_map(
-                static fn (Receiver $r) => $r->toArray(),
-                (array)array_filter($receivers, static fn ($r) => $r instanceof Receiver)
+            is_array($receivers) => array_map(
+                static fn(Receiver $r) => $r->toArray(),
+                (array)array_filter($receivers, static fn($r) => $r instanceof Receiver)
             ),
             default => [(Receiver::create((string)$receivers))->toArray()],
         };
@@ -153,7 +179,7 @@ class ApiService implements SingletonInterface
      * @param int|null $groupId
      * @return string|array|null
      */
-    public function getGroup(?int $groupId = null): null | string | array
+    public function getGroup(?int $groupId = null): null|string|array
     {
         $this->connect();
         $groupId ??= $this->configurationService->getGroupId();
@@ -172,7 +198,7 @@ class ApiService implements SingletonInterface
      * @param int|null $groupId
      * @return bool
      */
-    public function isReceiverOfGroup(int | string $id, ?int $groupId = null): bool
+    public function isReceiverOfGroup(int|string $id, ?int $groupId = null): bool
     {
         $this->connect();
         $groupId ??= $this->configurationService->getGroupId();
@@ -242,18 +268,18 @@ class ApiService implements SingletonInterface
         $groupId ??= $this->configurationService->getGroupId();
         $formId ??= $this->configurationService->getFormId();
         $doidata = [
-            'user_ip'    => $_SERVER['REMOTE_ADDR'] ?? '',
+            'user_ip' => $_SERVER['REMOTE_ADDR'] ?? '',
             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
-            'referer'    => $_SERVER['HTTP_REFERER'] ?? '',
+            'referer' => $_SERVER['HTTP_REFERER'] ?? '',
         ];
 
         try {
             $this->rest->post(
                 '/forms.json/' . $formId . '/send/activate',
                 [
-                    'email'     => $email,
+                    'email' => $email,
                     'groups_id' => $groupId,
-                    'doidata'   => $doidata,
+                    'doidata' => $doidata,
                 ]
             );
         } catch (GuzzleException $ex) {
@@ -272,18 +298,18 @@ class ApiService implements SingletonInterface
         $groupId ??= $this->configurationService->getGroupId();
         $formId ??= $this->configurationService->getFormId();
         $doidata = [
-            'user_ip'    => $_SERVER['REMOTE_ADDR'] ?? '',
+            'user_ip' => $_SERVER['REMOTE_ADDR'] ?? '',
             'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? '',
-            'referer'    => $_SERVER['HTTP_REFERER'] ?? '',
+            'referer' => $_SERVER['HTTP_REFERER'] ?? '',
         ];
 
         try {
             $this->rest->post(
                 '/forms.json/' . $formId . '/send/deactivate',
                 [
-                    'email'     => $email,
+                    'email' => $email,
                     'groups_id' => $groupId,
-                    'doidata'   => $doidata,
+                    'doidata' => $doidata,
                 ]
             );
         } catch (GuzzleException $ex) {

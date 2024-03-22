@@ -14,6 +14,13 @@ plugin.tx_cleverreach {
     # cat=plugin.tx_cleverreach//d; type=string; label=REST URL: Full REST API endpoint
     restUrl = https://rest.cleverreach.com/v2
 
+    # cat=plugin.tx_cleverreach//g; type=string; label=Token url
+    oauthTokenUrl = https://rest.cleverreach.com/oauth/token.php
+    # cat=plugin.tx_cleverreach//g; type=string; label=OAuth clientID (Alternatively, you can use 'OAuth  client id' and 'OAuth client secret' instead login/password)
+    oauthClientId =
+    # cat=plugin.tx_cleverreach//g; type=string; label=Client secret (Alternatively, you can use 'client secret' and 'token' instead login/password)
+    oauthClientSecret =
+
     # cat=plugin.tx_cleverreach//d; type=int; label=Opt-in Redirect: page UID to redirect after opt-in request
     optinRedirect =
     # cat=plugin.tx_cleverreach//d; type=int; label=Opt-out Redirect: page UID to redirect after opt-out request
