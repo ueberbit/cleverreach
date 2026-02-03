@@ -308,6 +308,10 @@ class ApiServiceTest extends LocalBaseTestCase
         $groupId = 123;
         $formId = 789;
 
+        $_SERVER['REMOTE_ADDR'] = null;
+        $_SERVER['HTTP_USER_AGENT'] = null;
+        $_SERVER['HTTP_REFERER'] = null;
+
         $rest = $this->createMock(RestService::class);
         $rest->expects(self::once())->method('post')->with(
             self::equalTo('/forms.json/' . $formId . '/send/activate'),
@@ -362,6 +366,10 @@ class ApiServiceTest extends LocalBaseTestCase
         $email = 'someone@domain.tld';
         $groupId = 123;
         $formId = 789;
+
+        $_SERVER['REMOTE_ADDR'] = null;
+        $_SERVER['HTTP_USER_AGENT'] = null;
+        $_SERVER['HTTP_REFERER'] = null;
 
         $rest = $this->createMock(RestService::class);
         $rest->expects(self::once())->method('post')->with(
