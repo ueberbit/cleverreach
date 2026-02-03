@@ -10,7 +10,6 @@ use TYPO3\CMS\Core\Database\Query\Restriction\DeletedRestriction;
 use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Install\Attribute\UpgradeWizard;
-use TYPO3\CMS\Install\Updates\BackendModulePermissionMigration;
 use TYPO3\CMS\Install\Updates\DatabaseUpdatedPrerequisite;
 use TYPO3\CMS\Install\Updates\UpgradeWizardInterface;
 
@@ -36,7 +35,6 @@ class PluginPermissionUpdater implements UpgradeWizardInterface
     {
         return [
             DatabaseUpdatedPrerequisite::class,
-            BackendModulePermissionMigration::class,
         ];
     }
 
@@ -60,7 +58,7 @@ class PluginPermissionUpdater implements UpgradeWizardInterface
         foreach ($records as $record) {
             $newList = str_replace(
                 ['list_type:cleverreach_pi1', 'list_type:cleverreach_pi2'],
-                ['CType:cleverreach_optin', 'list_type:cleverreach_optin'],
+                ['CType:cleverreach_optin', 'CType:cleverreach_optout'],
                 $record['explicit_allowdeny']
             );
 
