@@ -6,20 +6,19 @@ use Symfony\Component\Finder\Finder;
 
 $finder = Finder::create()
     ->name('/\\.php$/')
-    ->in(__DIR__ . '/Classes')
-    ->in(__DIR__ . '/Configuration')
-    ->in(__DIR__ . '/Tests');
+    ->in(__DIR__)
+    ->notPath('Resources')
+    ->notPath('vendor');
 
 return (new PhpCsFixer\Config())
     ->setUsingCache(true)
     ->setRiskyAllowed(true)
     ->setRules([
-        '@DoctrineAnnotation'       => true,
-        '@PSR12'                    => true,
-        '@PHP81Migration'           => true,
-        '@PHP80Migration:risky'     => true,
-        '@PHPUnit84Migration:risky' => true,
-        'align_multiline_comment'   => [
+        '@DoctrineAnnotation'     => true,
+        '@PSR12'                  => true,
+        '@PHP8x0Migration:risky'  => true,
+        '@PHP8x1Migration'        => true,
+        'align_multiline_comment' => [
             'comment_type' => 'phpdocs_like',
         ],
         'array_syntax' => [
@@ -120,8 +119,10 @@ return (new PhpCsFixer\Config())
         'single_quote' => [
             'strings_containing_single_quote_chars' => true,
         ],
+        'modifier_keywords' => [
+            'elements' => ['const', 'method', 'property'],
+        ],
         'standardize_not_equals'          => true,
-        'visibility_required'             => true,
         'ternary_operator_spaces'         => true,
         'whitespace_after_comma_in_array' => true,
     ])

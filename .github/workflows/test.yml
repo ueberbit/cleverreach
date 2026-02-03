@@ -14,8 +14,11 @@ jobs:
         php:
           - '8.2'
           - '8.3'
+          - '8.4'
+          - '8.5'
         typo3:
           - '13.4'
+          - '14.1'
 
     steps:
       - name: Checkout repository
@@ -26,7 +29,7 @@ jobs:
         with:
           php-version: ${{ matrix.php }}
 
-      - name: Test on PHP ${{ matrix.php }} on TYPO3 ${{ matrix.typo3 }}
+      - name: Test on PHP ${{ matrix.php }} for TYPO3 ${{ matrix.typo3 }}
         run: |
           composer remove --dev typo3/cms-form
           composer remove typo3/cms-core typo3/cms-extbase typo3/cms-install

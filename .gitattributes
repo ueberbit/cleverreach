@@ -1,3 +1,19 @@
+* text eol=lf
+
+*.png binary
+*.jpg binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
+*.eot binary
+*.otf binary
+*.ai binary
+*.pdf binary
+*.eps binary
+*.jar binary
+*.bcmap binary
+*.webp binary
+
 /.github/ export-ignore
 /Tests/ export-ignore
 /.editorconfig export-ignore

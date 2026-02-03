@@ -3,20 +3,18 @@ PHP_BIN ?= php
 
 install: vendor/autoload.php
 
-test: unit lint
-
-unit: vendor/autoload.php
-	$(PHP_BIN) vendor/bin/phpunit -c phpunit.xml
+test: vendor/autoload.php
+	$(PHP_BIN) vendor/bin/phpunit --configuration phpunit.xml
 
 coverage: vendor/autoload.php
 	rm -rf reports
-	$(PHP_BIN) vendor/bin/phpunit -c phpunit.xml --coverage-html reports
+	$(PHP_BIN) vendor/bin/phpunit --configuration phpunit.xml --coverage-html reports
 
 lint: vendor/autoload.php
-	$(PHP_BIN) vendor/bin/php-cs-fixer check --diff -vvv
+	$(PHP_BIN) vendor/bin/php-cs-fixer check --config=.php-cs-fixer.php --diff -vvv
 
 fix: vendor/autoload.php
-	$(PHP_BIN) vendor/bin/php-cs-fixer fix --diff -vvv
+	$(PHP_BIN) vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.php --diff -vvv
 
 vendor/autoload.php: composer.json composer.lock
 	composer install --prefer-dist --no-interaction --ansi --no-progress --no-plugins --no-scripts
