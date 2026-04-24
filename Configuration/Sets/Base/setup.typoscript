@@ -7,6 +7,9 @@ plugin.tx_cleverreach.settings {
     restUrl = {$supseven.cleverreach.restUrl}
     source = {$supseven.cleverreach.source}
     unsubscribemethod = {$supseven.cleverreach.unsubscribemethod}
+    oauthTokenUrl = {$plugin.tx_cleverreach.oauthTokenUrl}
+    oauthClientId = {$plugin.tx_cleverreach.oauthClientId}
+    oauthClientSecret = {$plugin.tx_cleverreach.oauthClientSecret}
 
     redirect {
         optin = {$supseven.cleverreach.optinRedirect}
